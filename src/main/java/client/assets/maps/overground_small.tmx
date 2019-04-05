@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="10" height="10" tilewidth="16" tileheight="16" infinite="0" nextlayerid="2" nextobjectid="1">
+ <tileset firstgid="1" name="pokemon_emerald_exterior_tileset" tilewidth="16" tileheight="16" tilecount="6072" columns="88">
+  <image source="../sprites/pokemon_emerald_exterior_tileset.png" width="1408" height="1104"/>
+ </tileset>
+ <layer id="1" name="Tile Layer 1" width="10" height="10">
+  <data encoding="csv">
+360,359,360,359,360,359,360,359,360,271,
+272,2820,2821,2822,2,2,2,2,2,359,
+360,2908,4578,2910,2,2,2,2,2,271,
+272,2996,2997,2998,2,2,2,2,2,359,
+360,2,2,2,2,2,2,2,2,271,
+272,2,2,2,2,2,2,2,2,359,
+360,2,2,2,2,2,2820,2821,2822,271,
+272,2,2,2,2,2,2908,4578,2910,359,
+360,2,2,2,2,2,2996,2997,2998,271,
+272,271,272,271,272,271,272,271,272,359
+</data>
+ </layer>
+</map>

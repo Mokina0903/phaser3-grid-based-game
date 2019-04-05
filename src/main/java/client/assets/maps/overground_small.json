@@ -1,0 +1,40 @@
+{ "height":10,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[360, 359, 360, 359, 360, 359, 360, 359, 360, 271, 272, 2820, 2821, 2822, 2, 2, 2, 2, 2, 359, 360, 2908, 4578, 2910, 2, 2, 2, 2, 2, 271, 272, 2996, 2997, 2998, 2, 2, 2, 2, 2, 359, 360, 2, 2, 2, 2, 2, 2, 2, 2, 271, 272, 2, 2, 2, 2, 2, 2, 2, 2, 359, 360, 2, 2, 2, 2, 2, 2820, 2821, 2822, 271, 272, 2, 2, 2, 2, 2, 2908, 4578, 2910, 359, 360, 2, 2, 2, 2, 2, 2996, 2997, 2998, 271, 272, 271, 272, 271, 272, 271, 272, 271, 272, 359],
+         "height":10,
+         "id":1,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":10,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":2,
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.2.3",
+ "tileheight":16,
+ "tilesets":[
+        {
+         "columns":88,
+         "firstgid":1,
+         "image":"..\/sprites\/pokemon_emerald_exterior_tileset.png",
+         "imageheight":1104,
+         "imagewidth":1408,
+         "margin":0,
+         "name":"pokemon_emerald_exterior_tileset",
+         "spacing":0,
+         "tilecount":6072,
+         "tileheight":16,
+         "tilewidth":16
+        }],
+ "tilewidth":16,
+ "type":"map",
+ "version":1.2,
+ "width":10
+}
