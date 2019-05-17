@@ -1,3 +1,6 @@
+package at.ac.tuwien.foop.client;
+
+import at.ac.tuwien.foop.client.server.util.HerokuUtil;
 import io.javalin.Javalin;
 import io.javalin.staticfiles.Location;
 import io.javalin.websocket.WsSession;
@@ -7,7 +10,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.eclipse.jetty.websocket.api.Session;
 import org.json.JSONObject;
-import server.util.HerokuUtil;
 
 import static j2html.TagCreator.article;
 import static j2html.TagCreator.attrs;
