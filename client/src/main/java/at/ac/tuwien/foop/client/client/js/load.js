@@ -8,15 +8,15 @@ var loadState={
 		game.scale.PageAlignVertically = true;
 		game.stage.backgroundColor = '#000000';
 
-		/**** Load graphics assets ****/
-		game.load.spritesheet('characters', 'assets/sprites/sprites.png', 32, 32);
-	//	game.load.image('lifebar', 'assets/maps/overground_small.json');
-		game.load.tilemap('level', 'assets/maps/overground_small.json', null, Phaser.Tilemap.TILED_JSON);
-		game.load.image('tiles', 'assets/sprites/pokemon_emerald_exterior_tileset.png');
+		/**** Load graphics assets1 ****/
+		game.load.spritesheet('characters', 'assets1/sprites/sprites.png', 32, 32);
+	//	game.load.image('lifebar', 'assets1/maps/overground_small.json');
+		game.load.tilemap('level', 'assets1/maps/overground_small.json', null, Phaser.Tilemap.TILED_JSON);
+		game.load.image('tiles', 'assets1/sprites/pokemon_emerald_exterior_tileset.png');
 
-		/**** Load audio assets ****/
-		game.load.audio('bump', 'assets/sounds/bump.mp3');
-		game.load.audio('hit', 'assets/sounds/ratatta.mp3');
+		/**** Load audio assets1 ****/
+		game.load.audio('bump', 'assets1/sounds/bump.mp3');
+		game.load.audio('hit', 'assets1/sounds/ratatta.mp3');
 
 
 	},
