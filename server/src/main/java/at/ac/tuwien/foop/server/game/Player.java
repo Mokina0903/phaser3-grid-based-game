@@ -1,5 +1,4 @@
-package at.ac.tuwien.foop.server.dto;
-
+package at.ac.tuwien.foop.server.game;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Request {
+public class Player {
 
     private String name;
+    private Long id;
+    private Position position;
+    private GameState knownState;
 }
