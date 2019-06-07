@@ -1,4 +1,4 @@
-package server.util;
+package at.ac.tuwien.foop.client.server.util;
 
 public class HerokuUtil {
 
