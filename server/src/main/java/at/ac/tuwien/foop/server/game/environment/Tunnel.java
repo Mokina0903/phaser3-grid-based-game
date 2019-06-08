@@ -1,4 +1,7 @@
-package at.ac.tuwien.foop.server.game;
+package at.ac.tuwien.foop.server.game.environment;
+
+import at.ac.tuwien.foop.server.game.GameState;
+import at.ac.tuwien.foop.server.game.player.Player;
 
 import java.util.Collection;
 
@@ -10,12 +13,12 @@ public class Tunnel implements GameEnvironment {
     Collection<Player> subscribedPlayers;
 
     @Override
-    public void subscribe(Player player) {
+    public void enterEnvironment(Player player) {
         // TODO
     }
 
     @Override
-    public void unsubscribe(Player player) {
+    public void leaveEnvironment(Player player) {
         // TODO
     }
 
@@ -33,5 +36,11 @@ public class Tunnel implements GameEnvironment {
     @Override
     public void notifyStateChanges() {
         // TODO
+    }
+
+    @Override
+    public Collection<Player> getPresentPlayers() {
+        // TODO
+        return null;
     }
 }
