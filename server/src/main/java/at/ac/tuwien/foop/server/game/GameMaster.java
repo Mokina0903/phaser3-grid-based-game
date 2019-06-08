@@ -1,7 +1,6 @@
 package at.ac.tuwien.foop.server.game;
 
 import at.ac.tuwien.foop.server.game.player.Player;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -12,12 +11,18 @@ import java.util.Collection;
  *
  * The GameMaster is essentially the 'persistence' layer of our application. Only 'Services' e.g.
  * MovementStrategy communicate with the GameMaster. The Endpoint never communicates directly with the GameMaster
+ *
+ * The GameMaster expects already validated client data. Therefore the validations should be done in the 'Services'
  */
 @Component
 public class GameMaster {
 
     Collection<Player> loggedInPlayers;
-    Collection<Environment> environments;
+
+    /**
+     * The state of the game that contains all environments and all the data about all the players in these environments
+     */
+    GameState gameState;
 
     /**
      * Registers player to the current game
