@@ -1,10 +1,11 @@
 package at.ac.tuwien.foop.server.endpoint;
 
 
+import at.ac.tuwien.foop.server.exception.GameException;
 import at.ac.tuwien.foop.server.game.GameState;
-import at.ac.tuwien.foop.server.game.Player;
+import at.ac.tuwien.foop.server.game.player.Player;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
@@ -41,9 +42,9 @@ public class GameController {
 
     @MessageMapping(MOVEMENT_ENDPOINT)
     @SendTo(TOPIC_GAME_STATE)
-    public ResponseEntity<GameState> move(Player player) {
+    public GameState move(Player player) {
         log.info("Receiving movement request: {}", player);
-        return ResponseEntity.ok(new GameState());
+        return new GameState();
     }
 
     /**
@@ -58,9 +59,9 @@ public class GameController {
      * @return the fitting future gameState for the player
      */
     @MessageMapping(CONFIRM_MOVEMENT_ENDPOINT)
-    public ResponseEntity<GameState> confirmMovement(Player player) {
+    public GameState confirmMovement(Player player) {
         log.info("Receiving confirmation request from player: {}", player);
-        return ResponseEntity.ok(new GameState());
+        return new GameState();
     }
 
     /**
@@ -72,8 +73,23 @@ public class GameController {
      */
     @MessageMapping(LOGIN_ENDPOINT)
     @SendTo(TOPIC_PLAYERS)
-    public ResponseEntity<Player> login(Player player) {
+    public Player login(Player player) {
         log.info("Receiving login request from player: {}", player);
-        return ResponseEntity.ok(player);
+        return player;
+    }
+
+    /**
+     * handles all thrown GameExceptions and maps them to a GameError Object, which clients can handle
+     *
+     * @param gameException the gameException handled. GameExceptions get thrown all around the application
+     * @return a GameError instance generated with the values of the given GameException instance
+     */
+    @MessageExceptionHandler
+    public GameError handleGameException(GameException gameException) {
+        return GameError
+                .builder()
+                .id(gameException.getErrorId())
+                .message(gameException.getMessage())
+                .build();
     }
 }

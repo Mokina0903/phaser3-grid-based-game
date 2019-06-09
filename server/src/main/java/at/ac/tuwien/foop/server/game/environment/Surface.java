@@ -1,4 +1,8 @@
-package at.ac.tuwien.foop.server.game;
+package at.ac.tuwien.foop.server.game.environment;
+
+import at.ac.tuwien.foop.server.game.GameState;
+import at.ac.tuwien.foop.server.game.Position;
+import at.ac.tuwien.foop.server.game.player.Player;
 
 import java.util.Collection;
 
@@ -9,13 +13,18 @@ public class Surface implements GameEnvironment {
      */
     Collection<Player> subscribedPlayers;
 
+    /**
+     * All global points of the game field this environment uses
+     */
+    Collection<Position> positions;
+
     @Override
-    public void subscribe(Player player) {
+    public void enterEnvironment(Player player) {
         // TODO
     }
 
     @Override
-    public void unsubscribe(Player player) {
+    public void leaveEnvironment(Player player) {
         // TODO
     }
 
@@ -33,5 +42,11 @@ public class Surface implements GameEnvironment {
     @Override
     public void notifyStateChanges() {
         // TODO
+    }
+
+    @Override
+    public Collection<Player> getPresentPlayers() {
+        // TODO
+        return null;
     }
 }
