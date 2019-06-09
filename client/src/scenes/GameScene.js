@@ -51,6 +51,8 @@ class GameScene extends Phaser.Scene {
             collides: true
         });
 
+        this.worldLayer.setCollisionByExclusion([-1]);
+
         this.physics.add.collider(this.player, this.worldLayer);
 
         // The camera should follow Player
@@ -74,7 +76,6 @@ class GameScene extends Phaser.Scene {
 
             this.physics.world.createDebugGraphic();
 
-            // todo fix colliding
             // Create worldLayer collision graphic above the player, but below the help text
             const graphics = this.add
                 .graphics()

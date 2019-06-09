@@ -4503,7 +4503,7 @@
    </properties>
   </tile>
  </tileset>
- <layer id="1" name="Below Player" width="20" height="30" locked="1">
+ <layer id="1" name="Below Player" width="20" height="30" visible="0" locked="1">
   <data>
    <tile gid="132"/>
    <tile gid="131"/>
@@ -5183,46 +5183,6 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="185"/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile gid="201"/>
-   <tile gid="202"/>
-   <tile gid="176"/>
-   <tile gid="177"/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile gid="176"/>
-   <tile gid="177"/>
-   <tile gid="201"/>
-   <tile gid="202"/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
-   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -5232,7 +5192,47 @@
    <tile gid="176"/>
    <tile gid="177"/>
    <tile/>
-   <tile gid="185"/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile gid="176"/>
+   <tile gid="177"/>
+   <tile gid="201"/>
+   <tile gid="202"/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile/>
+   <tile gid="201"/>
+   <tile gid="202"/>
+   <tile gid="176"/>
+   <tile gid="177"/>
+   <tile/>
+   <tile/>
    <tile/>
    <tile/>
    <tile gid="304"/>
@@ -5434,7 +5434,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="185"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile/>
@@ -5584,7 +5584,7 @@
    <tile/>
    <tile/>
    <tile/>
-   <tile gid="185"/>
+   <tile/>
    <tile/>
    <tile/>
    <tile gid="201"/>
@@ -5711,7 +5711,7 @@
    <tile gid="202"/>
   </data>
  </layer>
- <layer id="3" name="Holes" width="20" height="30">
+ <layer id="3" name="Holes" width="20" height="30" visible="0">
   <data>
    <tile/>
    <tile/>
@@ -6315,7 +6315,7 @@
    <tile/>
   </data>
  </layer>
- <objectgroup id="7" name="Objects">
+ <objectgroup id="7" name="Objects" visible="0">
   <object id="15" name="Spawn Point" x="288" y="704">
    <point/>
   </object>
