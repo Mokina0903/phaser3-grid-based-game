@@ -10,6 +10,11 @@ import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import static at.ac.tuwien.foop.server.Utils.IdGenerator.getId;
 import static at.ac.tuwien.foop.server.Utils.PlayerIdCache.addPlayer;
 
+
+/**
+ * called after connection established
+ * adds the session id and the player id into the PlayerIdCache
+ **/
 @Component
 public class StompSubscribeEventListener implements ApplicationListener<SessionSubscribeEvent> {
 
@@ -18,11 +23,10 @@ public class StompSubscribeEventListener implements ApplicationListener<SessionS
     @Override
     public void onApplicationEvent(SessionSubscribeEvent sessionSubscribeEvent) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(sessionSubscribeEvent.getMessage());
-        LOG.info("Header accessor: " + headerAccessor.getSessionId());
         String sessionId = headerAccessor.getSessionId();
         Long id = getId();
         addPlayer(sessionId, id);
-        LOG.info("Added player to cache: " + sessionId + " - " + id);
+        LOG.info("Added player with session " + sessionId + " and player id " + id + " to cache.");
 
     }
 }

@@ -10,6 +10,9 @@ import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
+/**
+ * Retrieves the session id on the server side
+ **/
 public class HttpHandshakeInterceptor implements HandshakeInterceptor {
 
     @Override
