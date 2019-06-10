@@ -1,3 +1,4 @@
+/*
 var stompClient = null;
 
 function setConnected(connected) {
@@ -48,3 +49,4 @@ $(function () {
     $( "#disconnect" ).click(function() { disconnect(); });
     $( "#send" ).click(function() { sendName(); });
 });
+*/

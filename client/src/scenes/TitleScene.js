@@ -4,6 +4,12 @@ class TitleScene extends Phaser.Scene {
             key: 'TitleScene'
         });
     }
+
+    //retrieve data from previous scene
+    init(data) {
+        this.client = data.client;
+    }
+
     preload() {
     }
 
@@ -39,6 +45,8 @@ class TitleScene extends Phaser.Scene {
         this.blink = 1000;
 
         this.startKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
+        this.check = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+
     }
 
     update(time, delta) {
@@ -53,6 +61,10 @@ class TitleScene extends Phaser.Scene {
 
         if (this.startKey.isDown) {
             this.startGame();
+        }
+
+        if (this.check.isDown) {
+            this.client.addPlayer();
         }
     }
 
