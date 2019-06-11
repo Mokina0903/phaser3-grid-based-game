@@ -1,14 +1,12 @@
 package at.ac.tuwien.foop.server.endpoint;
 
+
 import at.ac.tuwien.foop.server.dto.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
-
-import java.util.concurrent.ConcurrentHashMap;
 
 import static at.ac.tuwien.foop.server.Utils.PlayerIdCache.getPlayerId;
 
