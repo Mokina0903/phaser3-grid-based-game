@@ -13,5 +13,6 @@ Tutorial: https://www.youtube.com/watch?v=EhYogWngfME
 Web framework: Javalin https://javalin.io/
 
 ## Usage:
-Start Main.java for server startup + client startup
-Open index.html for client startup
+Run ServerApplication.java for server startup\
+In the client folder run `npm install` and `npm run dev` for client start up\
+Open `localhost:3000` in your browser
