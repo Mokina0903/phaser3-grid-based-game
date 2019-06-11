@@ -1,10 +1,13 @@
 package at.ac.tuwien.foop.server.Utils;
 
+
+import java.util.concurrent.atomic.AtomicLong;
+
 public class IdGenerator {
 
-    public static Long counter = 1L;
+    private static final AtomicLong counter = new AtomicLong(1L);
 
     public static Long getId() {
-        return counter++;
+        return counter.getAndIncrement();
     }
 }

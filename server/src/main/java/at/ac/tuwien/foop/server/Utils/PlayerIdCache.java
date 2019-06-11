@@ -5,11 +5,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Maps the session id to an incrementing player id
- * rather primitive for testin
+ * rather primitive for testing
  **/
 public class PlayerIdCache {
 
-    public static ConcurrentHashMap<String, Long> playerCache = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Long> playerCache = new ConcurrentHashMap<>();
 
     public static void addPlayer(String sessionId, Long id) {
         playerCache.putIfAbsent(sessionId, id);
