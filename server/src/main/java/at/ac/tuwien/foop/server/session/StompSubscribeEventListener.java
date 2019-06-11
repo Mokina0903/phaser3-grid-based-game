@@ -1,4 +1,4 @@
-package at.ac.tuwien.foop.server.Session;
+package at.ac.tuwien.foop.server.session;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,8 +7,8 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 
-import static at.ac.tuwien.foop.server.Utils.IdGenerator.getId;
-import static at.ac.tuwien.foop.server.Utils.PlayerIdCache.addPlayer;
+import static at.ac.tuwien.foop.server.util.IdGenerator.getId;
+import static at.ac.tuwien.foop.server.util.PlayerIdCache.addPlayer;
 
 
 /**

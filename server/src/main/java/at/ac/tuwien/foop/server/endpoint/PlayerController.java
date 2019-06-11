@@ -8,7 +8,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
-import static at.ac.tuwien.foop.server.Utils.PlayerIdCache.getPlayerId;
+import static at.ac.tuwien.foop.server.util.PlayerIdCache.getPlayerId;
 
 @Controller
 public class PlayerController {

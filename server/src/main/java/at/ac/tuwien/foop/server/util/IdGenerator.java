@@ -1,4 +1,4 @@
-package at.ac.tuwien.foop.server.Utils;
+package at.ac.tuwien.foop.server.util;
 
 
 import java.util.concurrent.atomic.AtomicLong;
