@@ -58,4 +58,11 @@ public class GameMaster {
     void buildGame() {
         // TODO
     }
+
+    /**
+     * starts the game
+     */
+    void start() {
+        // TODO
+    }
 }

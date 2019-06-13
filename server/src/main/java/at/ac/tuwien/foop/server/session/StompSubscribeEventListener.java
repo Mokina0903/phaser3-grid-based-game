@@ -16,17 +16,19 @@ import static at.ac.tuwien.foop.server.util.PlayerIdCache.addPlayer;
  * adds the session id and the player id into the PlayerIdCache
  **/
 @Component
+@Deprecated
 public class StompSubscribeEventListener implements ApplicationListener<SessionSubscribeEvent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(StompSubscribeEventListener.class);
 
     @Override
     public void onApplicationEvent(SessionSubscribeEvent sessionSubscribeEvent) {
+        /*
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(sessionSubscribeEvent.getMessage());
         String sessionId = headerAccessor.getSessionId();
         Long id = getId();
         addPlayer(sessionId, id);
         LOG.info("Added player with session " + sessionId + " and player id " + id + " to cache.");
-
+         */
     }
 }
