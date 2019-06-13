@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * The game master represents the state of the game
@@ -77,6 +79,8 @@ public class GameMaster {
                         .keySet()
                         .forEach(movingPlayer -> movingPlayer.move(targetLocationMap.get(movingPlayer)));
 
+                Collection<Player> killedPlayers = getKilledPlayers();
+                killedPlayers.forEach(killedPlayer -> playerStateMap.put(killedPlayer, Player.PlayerState.DEAD));
                 switchTurn();
             }
         }
@@ -140,6 +144,18 @@ public class GameMaster {
             currentTurn = Turn.CAT_TURN;
         }
         else throw new IllegalStateException();
+    }
+
+    private Collection<Player> getKilledPlayers() {
+        Stream<Player> mice = loggedInPlayers.stream()
+                .filter(player -> !playerStateMap.get(player).equals(Player.PlayerState.DEAD))
+                .filter(player -> player.getMovementStrategy() instanceof MouseMovement);
+
+        Stream<Player> cats = loggedInPlayers.stream()
+                .filter(player -> !playerStateMap.get(player).equals(Player.PlayerState.DEAD))
+                .filter(player -> player.getMovementStrategy() instanceof CatMovement);
+
+        return mice.filter(mouse -> cats.anyMatch(cat -> cat.getPosition().equals(mouse.getPosition()))).collect(Collectors.toList());
     }
 
     enum Turn {

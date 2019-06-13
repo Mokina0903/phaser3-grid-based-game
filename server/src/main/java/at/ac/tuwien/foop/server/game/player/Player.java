@@ -38,6 +38,7 @@ public class Player {
 
     public enum PlayerState {
         WAITING,
-        PLAYING
+        PLAYING,
+        DEAD
     }
 }
