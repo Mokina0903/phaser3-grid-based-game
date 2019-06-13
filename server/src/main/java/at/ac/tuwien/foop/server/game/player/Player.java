@@ -1,6 +1,6 @@
 package at.ac.tuwien.foop.server.game.player;
 
-import at.ac.tuwien.foop.server.game.GameState;
+import at.ac.tuwien.foop.server.game.GameModel;
 import at.ac.tuwien.foop.server.game.Position;
 import at.ac.tuwien.foop.server.game.environment.GameEnvironment;
 import at.ac.tuwien.foop.server.game.movement.MovementStrategy;
@@ -18,7 +18,7 @@ public class Player {
     private String name;
     private Long id;
     private Position position;
-    private GameState knownState;
+    private GameModel knownState;
     private MovementStrategy movementStrategy;
     private GameEnvironment currentEnvironment;
 

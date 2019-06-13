@@ -9,6 +9,7 @@ import at.ac.tuwien.foop.server.game.player.Player;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import java.security.SecureRandom;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,7 +43,7 @@ public class GameMaster {
     /**
      * The state of the game that contains all environments and all the data about all the players in these environments
      */
-    GameState gameState;
+    GameModel gameModel;
 
     /**
      * Registers player to the current game
@@ -90,7 +91,10 @@ public class GameMaster {
      * builds game environments i.e. builds the surface level and all tunnels
      */
     void buildGame() {
-        // TODO
+        SecureRandom secureRandom = new SecureRandom();
+
+        int xDimensions = secureRandom.nextInt(10);
+        int yDimensions = secureRandom.nextInt(10);
     }
 
     public Surface getSurface() {

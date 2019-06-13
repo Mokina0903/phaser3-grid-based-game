@@ -1,6 +1,6 @@
 package at.ac.tuwien.foop.server.game.environment;
 
-import at.ac.tuwien.foop.server.game.GameState;
+import at.ac.tuwien.foop.server.game.GameModel;
 import at.ac.tuwien.foop.server.game.Position;
 import at.ac.tuwien.foop.server.game.player.Player;
 
@@ -26,14 +26,14 @@ public interface GameEnvironment {
 
     /**
      * changes the state of this environment
-     * @param gameState the new state of the environment
+     * @param gameModel the new state of the environment
      */
-    void setGameState(GameState gameState);
+    void setGameModel(GameModel gameModel);
 
     /**
      * @return the current gameState
      */
-    GameState getGameState();
+    GameModel getGameModel();
 
     /**
      * Pushes the gameState to all subscribed players. Call this, when the gameState changes

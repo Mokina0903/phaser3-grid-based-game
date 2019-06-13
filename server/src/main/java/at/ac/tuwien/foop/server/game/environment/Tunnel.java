@@ -2,7 +2,7 @@ package at.ac.tuwien.foop.server.game.environment;
 
 import at.ac.tuwien.foop.server.exception.InvalidTransitionPositionsException;
 import at.ac.tuwien.foop.server.game.GameMaster;
-import at.ac.tuwien.foop.server.game.GameState;
+import at.ac.tuwien.foop.server.game.GameModel;
 import at.ac.tuwien.foop.server.game.Position;
 import at.ac.tuwien.foop.server.game.player.Player;
 
@@ -32,7 +32,7 @@ public class Tunnel implements GameEnvironment {
      */
     private Collection<Position> positions;
 
-    private GameState gameState;
+    private GameModel gameModel;
 
     private Collection<Position> tunnelExits;
 
@@ -51,19 +51,19 @@ public class Tunnel implements GameEnvironment {
     }
 
     @Override
-    public void setGameState(GameState gameState) {
-        this.gameState = gameState;
+    public void setGameModel(GameModel gameModel) {
+        this.gameModel = gameModel;
         notifyStateChanges();
     }
 
     @Override
-    public GameState getGameState() {
-        return gameState;
+    public GameModel getGameModel() {
+        return gameModel;
     }
 
     @Override
     public void notifyStateChanges() {
-        subscribedPlayers.forEach(player -> player.setKnownState(gameState));
+        subscribedPlayers.forEach(player -> player.setKnownState(gameModel));
     }
 
     @Override
