@@ -12,6 +12,8 @@ public class Surface implements GameEnvironment {
 
     private final GameMaster gameMaster;
 
+    private GameState gameState;
+
     /**
      * data structure to manage subscribed players
      */
@@ -33,34 +35,32 @@ public class Surface implements GameEnvironment {
 
     @Override
     public void enterEnvironment(Player player) {
-        // TODO
+        subscribedPlayers.add(player);
     }
 
     @Override
     public void leaveEnvironment(Player player) {
-        // TODO
+        subscribedPlayers.remove(player);
     }
 
     @Override
     public void setGameState(GameState gameState) {
-        // TODO
+        this.gameState = gameState;
     }
 
     @Override
     public GameState getGameState() {
-        // TODO
-        return null;
+        return gameState;
     }
 
     @Override
     public void notifyStateChanges() {
-        // TODO
+        subscribedPlayers.forEach(player -> player.setKnownState(gameState));
     }
 
     @Override
     public Collection<Player> getPresentPlayers() {
-        // TODO
-        return null;
+        return subscribedPlayers;
     }
 
     @Override

@@ -21,14 +21,6 @@ public interface MovementStrategy {
      */
     void prepareMovement(Player player, Position targetPosition);
 
-    /**
-     * executes the previously (via prepareMovement(...)) prepared movement
-     *
-     * @param player the player that wants to move
-     * @throws at.ac.tuwien.foop.server.exception.GameException in case something went wrong, target location is invalid or no movement was prepared
-     */
-    void move(Player player);
-
     // example implementation --> change if needed
 
     default void validateMovementPossible(Player player, Position targetPosition) {

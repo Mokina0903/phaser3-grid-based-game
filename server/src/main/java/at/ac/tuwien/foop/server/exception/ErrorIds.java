@@ -5,4 +5,5 @@ final class ErrorIds {
     static final int UNCATEGORIZED_SERVER = 1;
     static final int CANNOT_MOVE_SO_FAR = 2;
     static final int NO_MOVEMENT_PREPARED = 3;
+    static final int INVALID_PLAYER_STATE = 4;
 }

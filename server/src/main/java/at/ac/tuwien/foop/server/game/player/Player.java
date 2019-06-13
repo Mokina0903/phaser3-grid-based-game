@@ -26,10 +26,6 @@ public class Player {
         movementStrategy.prepareMovement(this, targetLocation);
     }
 
-    public void move() {
-        movementStrategy.move(this);
-    }
-
     public void move(Position targetLocation) {
         if (currentEnvironment.isLeavingEnvironment(targetLocation)) {
             GameEnvironment nextEnvironment = currentEnvironment.getAdjacentEnvironment(targetLocation);
@@ -38,5 +34,10 @@ public class Player {
             nextEnvironment.enterEnvironment(this);
         }
         position = targetLocation;
+    }
+
+    public enum PlayerState {
+        WAITING,
+        PLAYING
     }
 }
