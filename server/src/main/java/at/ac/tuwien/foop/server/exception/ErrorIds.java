@@ -1,10 +1,11 @@
 package at.ac.tuwien.foop.server.exception;
 
-public final class ErrorIds {
+final class ErrorIds {
 
-    public static final int UNCATEGORIZED_SERVER = 1;
-    public static final int CANNOT_MOVE_SO_FAR = 2;
-    public static final int PLAYER_ALREADY_EXISTS = 3;
-    public static final int INVALID_TOKEN = 4;
-    public static final int PLAYER_NOT_FOUND = 5;
+    static final Integer UNCATEGORIZED_SERVER = 1;
+    static final Integer CANNOT_MOVE_SO_FAR = 2;
+    static final Integer PLAYER_ALREADY_EXISTS = 3;
+    static final Integer INVALID_TOKEN = 4;
+    static final Integer PLAYER_NOT_FOUND = 5;
+    static final Integer NO_MOVEMENT_PREPARED = 6;
 }

@@ -1,6 +1,7 @@
 package at.ac.tuwien.foop.server.game.environment;
 
 import at.ac.tuwien.foop.server.game.GameState;
+import at.ac.tuwien.foop.server.game.Position;
 import at.ac.tuwien.foop.server.game.player.Player;
 
 import java.util.Collection;
@@ -43,4 +44,14 @@ public interface GameEnvironment {
      * @return all currently present players in this environment i.e. the subscribers of this observable
      */
     Collection<Player> getPresentPlayers();
+
+    Collection<Position> getEnvironmentTransitionPositions();
+
+    void setupEnvironment(Collection<Position> environmentArea, Collection<Position> environmentTransitionPositions);
+
+    default boolean isLeavingEnvironment(Position position) {
+        return getEnvironmentTransitionPositions().contains(position);
+    }
+
+    GameEnvironment getAdjacentEnvironment(Position position);
 }

@@ -1,9 +1,12 @@
 package at.ac.tuwien.foop.server.endpoint;
 
 
+import at.ac.tuwien.foop.server.dto.EmptyRequest;
+import at.ac.tuwien.foop.server.dto.MovementRequest;
 import at.ac.tuwien.foop.server.exception.GameException;
-import at.ac.tuwien.foop.server.game.GameState;
 import at.ac.tuwien.foop.server.game.player.Player;
+import at.ac.tuwien.foop.server.service.GameService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -14,7 +17,10 @@ import static at.ac.tuwien.foop.server.util.Constants.*;
 
 @Controller
 @Slf4j
+@AllArgsConstructor
 public class GameController {
+
+    private final GameService gameService;
 
     /**
      *
@@ -26,12 +32,11 @@ public class GameController {
      * @return the future state the game will have, if the movement is confirmed
      * @throws at.ac.tuwien.foop.server.exception.GameException if something went wrong (validation failed, future state could not be validated)
      */
-
     @MessageMapping(MOVEMENT_ENDPOINT)
     @SendTo(TOPIC_GAME_STATE)
-    public GameState move(Player player) {
-        log.info("Receiving movement request: {}", player);
-        return new GameState();
+    public void prepareMovement(MovementRequest movementRequest) {
+        log.info("Receiving movement request");
+        gameService.prepareMovement(movementRequest);
     }
 
     /**
@@ -46,9 +51,9 @@ public class GameController {
      * @return the fitting future gameState for the player
      */
     @MessageMapping(CONFIRM_MOVEMENT_ENDPOINT)
-    public GameState confirmMovement(Player player) {
-        log.info("Receiving confirmation request from player: {}", player);
-        return new GameState();
+    public void confirmMovement(EmptyRequest emptyRequest) {
+        log.info("Receiving confirmation request");
+        gameService.confirmMovement(emptyRequest);
     }
 
     /**
