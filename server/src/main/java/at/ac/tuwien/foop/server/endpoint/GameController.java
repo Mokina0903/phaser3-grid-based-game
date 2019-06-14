@@ -37,7 +37,7 @@ public class GameController {
 
     /**
      *
-     * Clients call this endpoint, when they want to move. The movement will then be validated.
+     * Clients call this endpoint, when they want to confirmMovement. The movement will then be validated.
      * If the movement is possible, the future state of the game (the state the game will have, after the movement is confirmed)
      * will be broadcasted to all connected clients
      *
@@ -61,7 +61,7 @@ public class GameController {
      * new views for the game state are distributed among the players (tunnel view vs top view)
      * and the new game state is distributed
      *
-     * @param player the player, who confirms their movement (they must have made a request to '/move' endpoint first)
+     * @param player the player, who confirms their movement (they must have made a request to '/confirmMovement' endpoint first)
      * @return the fitting future gameState for the player
      */
     @MessageMapping(CONFIRM_MOVEMENT_ENDPOINT)

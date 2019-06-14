@@ -4,6 +4,7 @@ import at.ac.tuwien.foop.server.game.GameModel;
 import at.ac.tuwien.foop.server.game.Position;
 import at.ac.tuwien.foop.server.game.environment.GameEnvironment;
 import at.ac.tuwien.foop.server.game.movement.MovementStrategy;
+import at.ac.tuwien.foop.server.game.state.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,30 +16,63 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Player {
 
+    private final PlayerState waitingState = new PlayerStateWaiting();
+    private final PlayerState deadState = new PlayerStateDead();
+    private final PlayerState preparingMovementState = new PlayerStatePreparingMovement(this);
+
     private String name;
     private Long id;
     private Position position;
     private GameModel knownState;
     private MovementStrategy movementStrategy;
     private GameEnvironment currentEnvironment;
+    private PlayerState currentState;
 
     public void prepareMovement(Position targetLocation) {
-        movementStrategy.prepareMovement(this, targetLocation);
+        currentState.prepareMovement(targetLocation);
     }
 
-    public void move(Position targetLocation) {
-        if (currentEnvironment.isLeavingEnvironment(targetLocation)) {
-            GameEnvironment nextEnvironment = currentEnvironment.getAdjacentEnvironment(targetLocation);
-
-            currentEnvironment.leaveEnvironment(this);
-            nextEnvironment.enterEnvironment(this);
-        }
-        position = targetLocation;
+    public void confirmMovement() {
+        currentState.confirmMovement();
     }
 
-    public enum PlayerState {
-        WAITING,
-        PLAYING,
-        DEAD
+    public void setWaiting() {
+        this.currentState = waitingState;
+    }
+
+    public void setDead() {
+        this.currentState = deadState;
+    }
+
+    public void setPreparingMovement() {
+        this.currentState = preparingMovementState;
+    }
+
+    public void setMovementPrepared(Position targetLocation) {
+        currentState = new PlayerStateMovementPrepared(this, targetLocation);
+    }
+
+    public void setMovementConfirmed(Position targetLocation) {
+        currentState = new PlayerStateMovementConfirmed(this, targetLocation);
+    }
+
+    public boolean isReady() {
+        return currentState.isReady();
+    }
+
+    public boolean isDead() {
+        return currentState.isDead();
+    }
+
+    public boolean isCat() {
+        return movementStrategy.isCat();
+    }
+
+    public boolean isMouse() {
+        return movementStrategy.isMouse();
+    }
+
+    public void move() {
+        currentState.move();
     }
 }

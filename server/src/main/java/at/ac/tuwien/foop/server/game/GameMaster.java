@@ -1,10 +1,7 @@
 package at.ac.tuwien.foop.server.game;
 
-import at.ac.tuwien.foop.server.exception.NoMovementPreparedException;
 import at.ac.tuwien.foop.server.game.environment.Surface;
 import at.ac.tuwien.foop.server.game.environment.Tunnel;
-import at.ac.tuwien.foop.server.game.movement.CatMovement;
-import at.ac.tuwien.foop.server.game.movement.MouseMovement;
 import at.ac.tuwien.foop.server.game.player.Player;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -13,37 +10,31 @@ import java.security.SecureRandom;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * The game master represents the state of the game
  * It knows at all times, where every player is and which state the game has
- *
+ * <p>
  * The GameMaster is essentially the 'persistence' layer of our application. Only 'Services' e.g.
  * MovementStrategy communicate with the GameMaster. The Endpoint never communicates directly with the GameMaster
- *
+ * <p>
  * The GameMaster expects already validated client data. Therefore the validations should be done in the 'Services'
  */
 @Component
 public class GameMaster {
 
-    private Surface surface;
-
-    private Collection<Tunnel> tunnels;
-
-    Collection<Player> loggedInPlayers;
-
     private final Map<Player, Position> targetLocationMap = new ConcurrentHashMap<>();
-
-    private final Map<Player, Player.PlayerState> playerStateMap = new ConcurrentHashMap<>();
-
-    private Turn currentTurn;
-
     /**
      * The state of the game that contains all environments and all the data about all the players in these environments
      */
     GameModel gameModel;
+    private Surface surface;
+    private Collection<Tunnel> tunnels;
+    private Collection<Player> loggedInPlayers;
+    private Turn currentTurn;
 
     /**
      * Registers player to the current game
@@ -54,35 +45,25 @@ public class GameMaster {
         // TODO
     }
 
-    /**
-     * Prepares movement for the player
-     *
-     * @param player the player that should be moved
-     * @param targetPosition the position the player wants to go to
-     */
-    public void prepareMovementForPlayer(Player player, Position targetPosition) {
-        targetLocationMap.putIfAbsent(player, targetPosition);
-    }
+    public void endRoundIfAllPlayersHaveConfirmedMovement() {
+        if (allPlayersInThisRoundReady()) {
+            switchTurn();
 
-    /**
-     * moves player to the targetLocation, checks if an environment change is about to happen and puts player in the correct environment
-     *
-     * @param player The player that should be moved
-     */
-    public void confirmMovement(Player player) {
-        if (targetLocationMap.get(player) == null) {
-            throw new NoMovementPreparedException(player.getId());
-        }
-        else {
-            playerStateMap.put(player, Player.PlayerState.WAITING);
-            if (allPlayersInThisRoundReady()) {
-                targetLocationMap
-                        .keySet()
-                        .forEach(movingPlayer -> movingPlayer.move(targetLocationMap.get(movingPlayer)));
+            if (currentTurn.equals(Turn.CAT_TURN)) {
+                loggedInPlayers.stream()
+                        .filter(Player::isCat)
+                        .forEach(Player::move);
 
-                Collection<Player> killedPlayers = getKilledPlayers();
-                killedPlayers.forEach(killedPlayer -> playerStateMap.put(killedPlayer, Player.PlayerState.DEAD));
-                switchTurn();
+                loggedInPlayers.stream()
+                        .filter(Player::isMouse)
+                        .forEach(Player::setPreparingMovement);
+            } else if (currentTurn.equals(Turn.MOUSE_TURN)) {
+                loggedInPlayers.stream()
+                        .filter(Player::isMouse)
+                        .forEach(Player::move);
+                loggedInPlayers.stream()
+                        .filter(Player::isCat)
+                        .forEach(Player::setPreparingMovement);
             }
         }
     }
@@ -112,22 +93,17 @@ public class GameMaster {
         return targetLocationMap.get(player);
     }
 
-    public Player.PlayerState getPlayerStateForPlayer(Player player) {
-        return playerStateMap.get(player);
-    }
 
     private boolean allPlayersInThisRoundReady() {
         if (currentTurn.equals(Turn.CAT_TURN)) {
             return loggedInPlayers.stream()
-                    .filter(player -> player.getMovementStrategy() instanceof CatMovement)
-                    .allMatch(player -> playerStateMap.get(player).equals(Player.PlayerState.WAITING));
-        }
-        else if (currentTurn.equals(Turn.MOUSE_TURN)) {
+                    .filter(Player::isCat)
+                    .allMatch(Player::isReady);
+        } else if (currentTurn.equals(Turn.MOUSE_TURN)) {
             return loggedInPlayers.stream()
-                    .filter(player -> player.getMovementStrategy() instanceof MouseMovement)
-                    .allMatch(player -> playerStateMap.get(player).equals(Player.PlayerState.WAITING));
-        }
-        else throw new IllegalStateException();
+                    .filter(Player::isMouse)
+                    .allMatch(Player::isReady);
+        } else throw new IllegalStateException();
     }
 
     private void broadcastGameState() {
@@ -143,21 +119,19 @@ public class GameMaster {
     private void switchTurn() {
         if (currentTurn.equals(Turn.CAT_TURN)) {
             currentTurn = Turn.MOUSE_TURN;
-        }
-        else if (currentTurn.equals(Turn.MOUSE_TURN)) {
+        } else if (currentTurn.equals(Turn.MOUSE_TURN)) {
             currentTurn = Turn.CAT_TURN;
-        }
-        else throw new IllegalStateException();
+        } else throw new IllegalStateException();
     }
 
     private Collection<Player> getKilledPlayers() {
         Stream<Player> mice = loggedInPlayers.stream()
-                .filter(player -> !playerStateMap.get(player).equals(Player.PlayerState.DEAD))
-                .filter(player -> player.getMovementStrategy() instanceof MouseMovement);
+                .filter(Predicate.not(Player::isDead))
+                .filter(Player::isMouse);
 
         Stream<Player> cats = loggedInPlayers.stream()
-                .filter(player -> !playerStateMap.get(player).equals(Player.PlayerState.DEAD))
-                .filter(player -> player.getMovementStrategy() instanceof CatMovement);
+                .filter(Predicate.not(Player::isDead))
+                .filter(Player::isCat);
 
         return mice.filter(mouse -> cats.anyMatch(cat -> cat.getPosition().equals(mouse.getPosition()))).collect(Collectors.toList());
     }

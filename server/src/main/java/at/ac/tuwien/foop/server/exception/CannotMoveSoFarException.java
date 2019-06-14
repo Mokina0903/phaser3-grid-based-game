@@ -7,6 +7,6 @@ import static at.ac.tuwien.foop.server.exception.ErrorIds.CANNOT_MOVE_SO_FAR;
 public class CannotMoveSoFarException extends GameException {
 
     public CannotMoveSoFarException(Player player, int distance) {
-        super(CANNOT_MOVE_SO_FAR, String.format("Player: %d cannot move so far (%d squares)", player.getId(), distance));
+        super(CANNOT_MOVE_SO_FAR, String.format("Player: %d cannot confirmMovement so far (%d squares)", player.getId(), distance));
     }
 }
