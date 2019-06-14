@@ -2,7 +2,7 @@ package at.ac.tuwien.foop.server.game.state;
 
 public class PlayerStateDead implements PlayerState {
 
-    private static final String GAME_STATE = "DEAD";
+    private static final String PLAYER_STATE = "DEAD";
 
     @Override
     public boolean isDead() {
@@ -11,6 +11,6 @@ public class PlayerStateDead implements PlayerState {
 
     @Override
     public String getGameState() {
-        return GAME_STATE;
+        return PLAYER_STATE;
     }
 }

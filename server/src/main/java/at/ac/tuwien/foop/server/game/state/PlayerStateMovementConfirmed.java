@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class PlayerStateMovementConfirmed implements PlayerState {
 
-    private static final String GAME_STATE = "DEAD";
+    private static final String PLAYER_STATE = "DEAD";
 
     private final Player player;
     private final Position targetLocation;
@@ -31,6 +31,6 @@ public class PlayerStateMovementConfirmed implements PlayerState {
 
     @Override
     public String getGameState() {
-        return GAME_STATE;
+        return PLAYER_STATE;
     }
 }

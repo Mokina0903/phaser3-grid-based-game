@@ -3,6 +3,8 @@ package at.ac.tuwien.foop.server.game;
 import at.ac.tuwien.foop.server.game.environment.Surface;
 import at.ac.tuwien.foop.server.game.environment.Tunnel;
 import at.ac.tuwien.foop.server.game.player.Player;
+import at.ac.tuwien.foop.server.game.state.GameState;
+import at.ac.tuwien.foop.server.game.state.GameStatePreGame;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -27,11 +29,14 @@ public class GameMaster {
     /**
      * The state of the game that contains all environments and all the data about all the players in these environments
      */
-    GameModel gameModel;
+    private GameModel gameModel;
     private Surface surface;
     private Collection<Tunnel> tunnels;
     private Collection<Player> loggedInPlayers;
     private Turn currentTurn;
+    private Tunnel targetTunnel;
+
+    private GameState currentGameState = new GameStatePreGame();
 
     /**
      * Registers player to the current game
@@ -47,23 +52,23 @@ public class GameMaster {
             switchTurn();
 
             if (currentTurn.equals(Turn.CAT_TURN)) {
-                loggedInPlayers.stream()
-                        .filter(Player::isCat)
-                        .forEach(Player::move);
-
-                loggedInPlayers.stream()
-                        .filter(Player::isMouse)
-                        .forEach(Player::setPreparingMovement);
+                getCatStream().forEach(Player::move);
+                getMiceStream().forEach(Player::setPreparingMovement);
             } else if (currentTurn.equals(Turn.MOUSE_TURN)) {
-                loggedInPlayers.stream()
-                        .filter(Player::isMouse)
-                        .forEach(Player::move);
-                loggedInPlayers.stream()
-                        .filter(Player::isCat)
-                        .forEach(Player::setPreparingMovement);
+                getMiceStream().forEach(Player::move);
+                getCatStream().forEach(Player::setPreparingMovement);
             }
 
             getKilledPlayers().forEach(Player::setDead);
+
+            if (allMiceDead()) {
+                getMiceStream().forEach(Player::setLost);
+                getCatStream().forEach(Player::setWon);
+            }
+            else if (allLivingMiceInTargetTunnel()) {
+                getMiceStream().forEach(Player::setWon);
+                getCatStream().forEach(Player::setLost);
+            }
         }
     }
 
@@ -74,6 +79,10 @@ public class GameMaster {
         Pair<Surface, Collection<Tunnel>> gameField = GameUtils.getGameField();
         surface = gameField.getKey();
         tunnels = gameField.getRight();
+    }
+
+    public GameState getCurrentGameState() {
+        return currentGameState;
     }
 
     private boolean allPlayersInThisRoundReady() {
@@ -106,16 +115,37 @@ public class GameMaster {
         } else throw new IllegalStateException();
     }
 
-    private Collection<Player> getKilledPlayers() {
-        Stream<Player> mice = loggedInPlayers.stream()
-                .filter(Predicate.not(Player::isDead))
+    private Stream<Player> getMiceStream() {
+        return loggedInPlayers
+                .stream()
                 .filter(Player::isMouse);
+    }
 
-        Stream<Player> cats = loggedInPlayers.stream()
-                .filter(Predicate.not(Player::isDead))
+    private Stream<Player> getCatStream() {
+        return loggedInPlayers
+                .stream()
                 .filter(Player::isCat);
+    }
 
-        return mice.filter(mouse -> cats.anyMatch(cat -> cat.getPosition().equals(mouse.getPosition()))).collect(Collectors.toList());
+    private Collection<Player> getKilledPlayers() {
+        Stream<Player> livingMice = getMiceStream()
+                .filter(Predicate.not(Player::isDead));
+
+        Stream<Player> livingCats = getCatStream()
+                // There should not be any dead cats anyway
+                .filter(Predicate.not(Player::isDead));
+
+        return livingMice.filter(mouse -> livingCats.anyMatch(cat -> cat.getPosition().equals(mouse.getPosition()))).collect(Collectors.toList());
+    }
+
+    private boolean allMiceDead() {
+        return getMiceStream().allMatch(Player::isDead);
+    }
+
+    private boolean allLivingMiceInTargetTunnel() {
+        return getMiceStream()
+                .filter(Predicate.not(Player::isDead))
+                .allMatch(mouse -> targetTunnel.isPlayerPresent(mouse));
     }
 
     enum Turn {

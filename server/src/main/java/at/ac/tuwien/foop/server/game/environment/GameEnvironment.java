@@ -57,4 +57,8 @@ public interface GameEnvironment {
     default GameEnvironment getAdjacentEnvironment(Position position) {
         return getEnvironmentTransitionMap().get(position);
     }
+
+    default boolean isPlayerPresent(Player player) {
+        return getPresentPlayers().contains(player);
+    }
 }

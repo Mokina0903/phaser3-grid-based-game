@@ -19,6 +19,8 @@ public class Player {
     private final PlayerState waitingState = new PlayerStateWaiting();
     private final PlayerState deadState = new PlayerStateDead();
     private final PlayerState preparingMovementState = new PlayerStatePreparingMovement(this);
+    private final PlayerState wonState = new PlayerStateWon();
+    private final PlayerState lostState = new PlayerStateLost();
 
     private String name;
     private Long id;
@@ -54,6 +56,14 @@ public class Player {
 
     public void setMovementConfirmed(Position targetLocation) {
         currentState = new PlayerStateMovementConfirmed(this, targetLocation);
+    }
+
+    public void setWon() {
+        currentState = wonState;
+    }
+
+    public void setLost() {
+        currentState = lostState;
     }
 
     public boolean isReady() {
