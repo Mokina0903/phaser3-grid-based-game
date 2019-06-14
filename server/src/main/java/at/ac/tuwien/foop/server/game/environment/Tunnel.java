@@ -1,21 +1,19 @@
 package at.ac.tuwien.foop.server.game.environment;
 
-import at.ac.tuwien.foop.server.exception.InvalidTransitionPositionsException;
-import at.ac.tuwien.foop.server.game.GameMaster;
 import at.ac.tuwien.foop.server.game.GameModel;
 import at.ac.tuwien.foop.server.game.Position;
 import at.ac.tuwien.foop.server.game.player.Player;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
 
 public class Tunnel implements GameEnvironment {
-
-    private final GameMaster gameMaster;
 
     /**
      * data structure to manage subscribed players
      */
-    private Collection<Player> subscribedPlayers;
+    private Collection<Player> subscribedPlayers = new HashSet<>();
 
     /**
      * All global points of the game field this environment uses
@@ -34,11 +32,7 @@ public class Tunnel implements GameEnvironment {
 
     private GameModel gameModel;
 
-    private Collection<Position> tunnelExits;
-
-    public Tunnel(GameMaster gameMaster) {
-        this.gameMaster = gameMaster;
-    }
+    private Map<Position, GameEnvironment> tunnelExitMap;
 
     @Override
     public void enterEnvironment(Player player) {
@@ -72,25 +66,13 @@ public class Tunnel implements GameEnvironment {
     }
 
     @Override
-    public Collection<Position> getEnvironmentTransitionPositions() {
-        return tunnelExits;
+    public Map<Position, GameEnvironment> getEnvironmentTransitionMap() {
+        return tunnelExitMap;
     }
 
     @Override
-    public void setupEnvironment(Collection<Position> environmentArea, Collection<Position> environmentTransitionPositions) {
-        environmentTransitionPositions.stream().filter(position -> !environmentArea.contains(position)).findFirst().ifPresentOrElse(
-                invalidPosition -> {
-                    throw new InvalidTransitionPositionsException(invalidPosition, environmentArea);
-                },
-                () -> {
-                    this.positions = environmentArea;
-                    this.tunnelExits = environmentTransitionPositions;
-                }
-        );
-    }
-
-    @Override
-    public GameEnvironment getAdjacentEnvironment(Position position) {
-        return gameMaster.getSurface();
+    public void setupEnvironment(Collection<Position> environmentArea, Map<Position, GameEnvironment> environmentTransitionMap) {
+        positions = environmentArea;
+        tunnelExitMap = environmentTransitionMap;
     }
 }

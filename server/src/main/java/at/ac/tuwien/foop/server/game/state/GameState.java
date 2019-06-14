@@ -1,13 +1,22 @@
 package at.ac.tuwien.foop.server.game.state;
 
+import at.ac.tuwien.foop.server.exception.IllegalOperationForGameStateException;
 import at.ac.tuwien.foop.server.game.Position;
 import at.ac.tuwien.foop.server.game.player.Player;
 
 public interface GameState {
 
-    void login();
+    default void login() {
+        throw new IllegalOperationForGameStateException("login", getGameState());
+    }
 
-    void prepareMovement(Player player, Position targetLocation);
+    default void prepareMovement(Player player, Position targetLocation) {
+        throw new IllegalOperationForGameStateException("prepare movement", getGameState());
+    }
 
-    void confirmMovement(Player player);
+    default void confirmMovement(Player player) {
+        throw new IllegalOperationForGameStateException("confirm movement", getGameState());
+    }
+
+    String getGameState();
 }

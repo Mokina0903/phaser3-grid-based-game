@@ -1,14 +1,11 @@
 package at.ac.tuwien.foop.server.game.state;
 
-import at.ac.tuwien.foop.server.exception.IllegalOperationForGameStateException;
 import at.ac.tuwien.foop.server.game.Position;
 import at.ac.tuwien.foop.server.game.player.Player;
 
 public class GameStateInGame implements GameState {
-    @Override
-    public void login() {
-        throw new IllegalOperationForGameStateException("login", "'in game'");
-    }
+
+    private static final String GAME_STATE = "IN_GAME";
 
     @Override
     public void prepareMovement(Player player, Position targetLocation) {
@@ -18,5 +15,10 @@ public class GameStateInGame implements GameState {
     @Override
     public void confirmMovement(Player player) {
         player.confirmMovement();
+    }
+
+    @Override
+    public String getGameState() {
+        return GAME_STATE;
     }
 }

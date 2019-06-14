@@ -1,12 +1,13 @@
 package at.ac.tuwien.foop.server.game.state;
 
-import at.ac.tuwien.foop.server.exception.IllegalOperationForPlayerStateException;
 import at.ac.tuwien.foop.server.game.Position;
 import at.ac.tuwien.foop.server.game.player.Player;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public class PlayerStateMovementPrepared implements PlayerState {
+
+    private static final String GAME_STATE = "DEAD";
 
     private final Player player;
     private Position targetPosition;
@@ -29,7 +30,7 @@ public class PlayerStateMovementPrepared implements PlayerState {
     }
 
     @Override
-    public void move() {
-        throw new IllegalOperationForPlayerStateException("move", "'movement prepared'");
+    public String getGameState() {
+        return GAME_STATE;
     }
 }

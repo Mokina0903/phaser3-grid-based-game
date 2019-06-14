@@ -1,37 +1,31 @@
 package at.ac.tuwien.foop.server.game.environment;
 
-import at.ac.tuwien.foop.server.exception.InvalidTransitionPositionsException;
-import at.ac.tuwien.foop.server.game.GameMaster;
 import at.ac.tuwien.foop.server.game.GameModel;
 import at.ac.tuwien.foop.server.game.Position;
 import at.ac.tuwien.foop.server.game.player.Player;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
 
 public class Surface implements GameEnvironment {
-
-    private final GameMaster gameMaster;
 
     private GameModel gameModel;
 
     /**
      * data structure to manage subscribed players
      */
-    Collection<Player> subscribedPlayers;
+    private Collection<Player> subscribedPlayers = new HashSet<>();
 
     /**
      * All global points of the game field this environment uses
      */
-    Collection<Position> positions;
+    private Collection<Position> positions;
 
     /**
      * All entries to tunnels. The Surface (or the players on the surface) do not know, how the tunnels are connected
      */
-    Collection<Position> tunnelEntries;
-
-    public Surface(GameMaster gameMaster) {
-        this.gameMaster = gameMaster;
-    }
+    private Map<Position, GameEnvironment> tunnelEntries;
 
     @Override
     public void enterEnvironment(Player player) {
@@ -64,25 +58,13 @@ public class Surface implements GameEnvironment {
     }
 
     @Override
-    public Collection<Position> getEnvironmentTransitionPositions() {
+    public Map<Position, GameEnvironment> getEnvironmentTransitionMap() {
         return tunnelEntries;
     }
 
     @Override
-    public void setupEnvironment(Collection<Position> environmentArea, Collection<Position> environmentTransitionPositions) {
-        environmentTransitionPositions.stream().filter(position -> !environmentArea.contains(position)).findFirst().ifPresentOrElse(
-                invalidPosition -> {
-                    throw new InvalidTransitionPositionsException(invalidPosition, environmentArea);
-                },
-                () -> {
-                    this.positions = environmentArea;
-                    this.tunnelEntries = environmentTransitionPositions;
-                }
-        );
-    }
-
-    @Override
-    public GameEnvironment getAdjacentEnvironment(Position position) {
-        return gameMaster.getTunnelForPosition(position);
+    public void setupEnvironment(Collection<Position> environmentArea, Map<Position, GameEnvironment> environmentTransitionMap) {
+        positions = environmentArea;
+        tunnelEntries = environmentTransitionMap;
     }
 }

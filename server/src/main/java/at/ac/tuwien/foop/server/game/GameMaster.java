@@ -3,10 +3,10 @@ package at.ac.tuwien.foop.server.game;
 import at.ac.tuwien.foop.server.game.environment.Surface;
 import at.ac.tuwien.foop.server.game.environment.Tunnel;
 import at.ac.tuwien.foop.server.game.player.Player;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import java.security.SecureRandom;
 import java.util.Collection;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -71,23 +71,10 @@ public class GameMaster {
      * builds game environments i.e. builds the surface level and all tunnels
      */
     void buildGame() {
-        SecureRandom secureRandom = new SecureRandom();
-
-        int xDimensions = secureRandom.nextInt(10);
-        int yDimensions = secureRandom.nextInt(10);
+        Pair<Surface, Collection<Tunnel>> gameField = GameUtils.getGameField();
+        surface = gameField.getKey();
+        tunnels = gameField.getRight();
     }
-
-    public Surface getSurface() {
-        return surface;
-    }
-
-    public Tunnel getTunnelForPosition(Position position) {
-        return tunnels.stream()
-                .filter(tunnel -> tunnel.getEnvironmentTransitionPositions().contains(position))
-                .findFirst()
-                .orElseThrow(IllegalStateException::new);
-    }
-
 
     private boolean allPlayersInThisRoundReady() {
         if (currentTurn.equals(Turn.CAT_TURN)) {

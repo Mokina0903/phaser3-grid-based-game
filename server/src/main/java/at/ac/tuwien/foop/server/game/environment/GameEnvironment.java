@@ -5,6 +5,7 @@ import at.ac.tuwien.foop.server.game.Position;
 import at.ac.tuwien.foop.server.game.player.Player;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Represents a environment in which the players can be => Tunnel/Surface
@@ -45,13 +46,15 @@ public interface GameEnvironment {
      */
     Collection<Player> getPresentPlayers();
 
-    Collection<Position> getEnvironmentTransitionPositions();
+    Map<Position, GameEnvironment> getEnvironmentTransitionMap();
 
-    void setupEnvironment(Collection<Position> environmentArea, Collection<Position> environmentTransitionPositions);
+    void setupEnvironment(Collection<Position> environmentArea, Map<Position, GameEnvironment> environmentTransitionMap);
 
     default boolean isLeavingEnvironment(Position position) {
-        return getEnvironmentTransitionPositions().contains(position);
+        return getEnvironmentTransitionMap().containsKey(position);
     }
 
-    GameEnvironment getAdjacentEnvironment(Position position);
+    default GameEnvironment getAdjacentEnvironment(Position position) {
+        return getEnvironmentTransitionMap().get(position);
+    }
 }

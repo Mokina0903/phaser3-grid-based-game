@@ -75,4 +75,13 @@ public class Player {
     public void move() {
         currentState.move();
     }
+
+    public void leaveEnvironment() {
+        currentEnvironment.leaveEnvironment(this);
+    }
+
+    public void enterEnvironment(GameEnvironment environment) {
+        environment.enterEnvironment(this);
+        currentEnvironment = environment;
+    }
 }

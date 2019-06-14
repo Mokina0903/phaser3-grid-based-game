@@ -1,12 +1,21 @@
 package at.ac.tuwien.foop.server.game.state;
 
+import at.ac.tuwien.foop.server.exception.IllegalOperationForPlayerStateException;
 import at.ac.tuwien.foop.server.game.Position;
 
 public interface PlayerState {
 
-    void prepareMovement(Position position);
+    default void prepareMovement(Position position) {
+        throw new IllegalOperationForPlayerStateException("movement preparation", getGameState());
+    }
 
-    void confirmMovement();
+    default void confirmMovement() {
+        throw new IllegalOperationForPlayerStateException("confirm movement", getGameState());
+    }
+
+    default void move() {
+        throw new IllegalOperationForPlayerStateException("movement", getGameState());
+    }
 
     default boolean isReady() {
         return false;
@@ -16,5 +25,5 @@ public interface PlayerState {
         return false;
     }
 
-    void move();
+    String getGameState();
 }
