@@ -4,6 +4,7 @@ import at.ac.tuwien.foop.server.game.environment.Surface;
 import at.ac.tuwien.foop.server.game.environment.Tunnel;
 import at.ac.tuwien.foop.server.game.player.Player;
 import at.ac.tuwien.foop.server.game.state.GameState;
+import at.ac.tuwien.foop.server.game.state.GameStatePostGame;
 import at.ac.tuwien.foop.server.game.state.GameStatePreGame;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.core.env.Environment;
@@ -67,10 +68,14 @@ public class GameMaster {
             if (allMiceDead()) {
                 getMiceStream().forEach(Player::setLost);
                 getCatStream().forEach(Player::setWon);
+
+                currentGameState = new GameStatePostGame();
             }
             else if (allLivingMiceInTargetTunnel()) {
                 getMiceStream().forEach(Player::setWon);
                 getCatStream().forEach(Player::setLost);
+
+                currentGameState = new GameStatePostGame();
             }
         }
     }
