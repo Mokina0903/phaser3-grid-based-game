@@ -1,6 +1,5 @@
 package at.ac.tuwien.foop.server.game.movement;
 
-import at.ac.tuwien.foop.server.game.GameMaster;
 import at.ac.tuwien.foop.server.game.Position;
 import at.ac.tuwien.foop.server.game.player.Player;
 import lombok.AllArgsConstructor;
@@ -13,10 +12,8 @@ public class MouseMovement implements MovementStrategy {
      */
     private static final int MOVEMENT_SPEED = 1;
 
-    private final GameMaster gameMaster;
-
     @Override
-    public void prepareMovement(Player player, Position targetPosition) {
+    public void validatePrepareMovement(Player player, Position targetPosition) {
         validateMovementPossible(player, targetPosition);
     }
 

@@ -19,7 +19,7 @@ public interface MovementStrategy {
      * @param targetPosition the Position, where the player wants to go to
      * @throws at.ac.tuwien.foop.server.exception.GameException in case something went wrong or target location is invalid
      */
-    void prepareMovement(Player player, Position targetPosition);
+    void validatePrepareMovement(Player player, Position targetPosition);
 
     // example implementation --> change if needed
 

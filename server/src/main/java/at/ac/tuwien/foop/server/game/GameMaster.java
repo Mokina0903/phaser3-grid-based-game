@@ -8,8 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
 import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -26,7 +24,6 @@ import java.util.stream.Stream;
 @Component
 public class GameMaster {
 
-    private final Map<Player, Position> targetLocationMap = new ConcurrentHashMap<>();
     /**
      * The state of the game that contains all environments and all the data about all the players in these environments
      */
@@ -65,6 +62,8 @@ public class GameMaster {
                         .filter(Player::isCat)
                         .forEach(Player::setPreparingMovement);
             }
+
+            getKilledPlayers().forEach(Player::setDead);
         }
     }
 
@@ -87,10 +86,6 @@ public class GameMaster {
                 .filter(tunnel -> tunnel.getEnvironmentTransitionPositions().contains(position))
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);
-    }
-
-    public Position getPreparedMovementForPlayer(Player player) {
-        return targetLocationMap.get(player);
     }
 
 

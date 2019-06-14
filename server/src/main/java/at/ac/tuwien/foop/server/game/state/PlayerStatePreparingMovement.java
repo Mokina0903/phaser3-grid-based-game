@@ -12,7 +12,7 @@ public class PlayerStatePreparingMovement implements PlayerState {
 
     @Override
     public void prepareMovement(Position position) {
-        player.getMovementStrategy().prepareMovement(player, position);
+        player.getMovementStrategy().validatePrepareMovement(player, position);
         player.setMovementPrepared(position);
     }
 

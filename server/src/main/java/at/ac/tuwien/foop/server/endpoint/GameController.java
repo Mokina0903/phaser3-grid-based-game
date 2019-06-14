@@ -29,7 +29,7 @@ public class GameController {
     /**
      * Endpoints. (Pls change, if the names are stupid)
      */
-    private static final String MOVEMENT_ENDPOINT = "/prepareMovement";
+    private static final String MOVEMENT_ENDPOINT = "/validatePrepareMovement";
     private static final String CONFIRM_MOVEMENT_ENDPOINT = MOVEMENT_ENDPOINT + "/confirm";
     private static final String LOGIN_ENDPOINT = "/login";
 
