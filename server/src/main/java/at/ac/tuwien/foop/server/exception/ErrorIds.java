@@ -8,4 +8,5 @@ final class ErrorIds {
     static final Integer INVALID_TOKEN = 4;
     static final Integer PLAYER_NOT_FOUND = 5;
     static final Integer NO_MOVEMENT_PREPARED = 6;
+    static final Integer BAD_REQUEST = 7;
 }

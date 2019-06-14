@@ -1,8 +1,8 @@
 package at.ac.tuwien.foop.server.repository;
 
 
-import at.ac.tuwien.foop.server.exception.GameException;
 import at.ac.tuwien.foop.server.exception.PlayerAlreadyExistsException;
+import at.ac.tuwien.foop.server.exception.PlayerNotFoundException;
 import at.ac.tuwien.foop.server.game.movement.CatMovement;
 import at.ac.tuwien.foop.server.game.movement.MouseMovement;
 import at.ac.tuwien.foop.server.game.movement.MovementStrategy;
@@ -40,10 +40,10 @@ public class PlayerRepository {
         playersLock.readLock().lock();
         Player player = players.get(id);
         playersLock.readLock().unlock();
-        return new Optional<>(player);
+        return Optional.ofNullable(player);
     }
 
-    public Player createNewPlayer(String name) {
+    public Player createPlayer(String name) {
         Long id = currentId.getAndIncrement();
         Player newPlayer = Player.builder()
                 .id(id)
@@ -59,5 +59,16 @@ public class PlayerRepository {
         }
         log.info("Created new player with id {}", id);
         return newPlayer;
+    }
+
+    public Player updatePlayer(Player player) {
+        playersLock.writeLock().lock();
+        Player updatedPlayer = players.computeIfPresent(player.getId(), (id, oldPlayer) -> player);
+        playersLock.writeLock().unlock();
+        if(updatedPlayer == null) {
+            throw new PlayerNotFoundException(player.getId());
+        }
+        log.info("Updated player with id {}", player.getId());
+        return updatedPlayer;
     }
 }

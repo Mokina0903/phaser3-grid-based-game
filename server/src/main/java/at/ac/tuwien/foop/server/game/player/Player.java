@@ -9,17 +9,27 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Player {
 
-    private String name;
+    @NotNull
     private Long id;
+
+    @NotNull
+    private String name;
+
     private Position position;
+
     private GameState knownState;
+
+    @NotNull
     private MovementStrategy movementStrategy;
+
     private GameEnvironment currentEnvironment;
 
     public void prepareMovement(Position targetLocation) {

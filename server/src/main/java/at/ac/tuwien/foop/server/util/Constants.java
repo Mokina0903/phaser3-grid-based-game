@@ -16,7 +16,6 @@ public final class Constants {
      */
     public static final String MOVEMENT_ENDPOINT = "/move";
     public static final String CONFIRM_MOVEMENT_ENDPOINT = MOVEMENT_ENDPOINT + "/confirm";
-    public static final String LOGIN_ENDPOINT = "/login";
 
     private Constants() { }
 }
