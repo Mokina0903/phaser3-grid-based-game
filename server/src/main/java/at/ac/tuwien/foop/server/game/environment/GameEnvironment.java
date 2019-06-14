@@ -1,6 +1,5 @@
 package at.ac.tuwien.foop.server.game.environment;
 
-import at.ac.tuwien.foop.server.game.GameModel;
 import at.ac.tuwien.foop.server.game.Position;
 import at.ac.tuwien.foop.server.game.player.Player;
 
@@ -24,17 +23,6 @@ public interface GameEnvironment {
      * @param player the player to be unsubscribed
      */
     void leaveEnvironment(Player player);
-
-    /**
-     * changes the state of this environment
-     * @param gameModel the new state of the environment
-     */
-    void setGameModel(GameModel gameModel);
-
-    /**
-     * @return the current gameState
-     */
-    GameModel getGameModel();
 
     /**
      * Pushes the gameState to all subscribed players. Call this, when the gameState changes

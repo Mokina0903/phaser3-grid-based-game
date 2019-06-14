@@ -9,7 +9,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import java.security.SecureRandom;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -76,9 +78,12 @@ public class GameMaster {
      * builds game environments i.e. builds the surface level and all tunnels
      */
     void buildGame() {
-        Pair<Surface, Collection<Tunnel>> gameField = GameUtils.getGameField();
+        Pair<Surface, List<Tunnel>> gameField = GameUtils.getGameField();
         surface = gameField.getKey();
         tunnels = gameField.getRight();
+
+        SecureRandom secureRandom = new SecureRandom();
+        targetTunnel = gameField.getRight().get(secureRandom.nextInt(gameField.getRight().size()));
     }
 
     public GameState getCurrentGameState() {

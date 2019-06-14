@@ -1,6 +1,5 @@
 package at.ac.tuwien.foop.server.game.environment;
 
-import at.ac.tuwien.foop.server.game.GameModel;
 import at.ac.tuwien.foop.server.game.Position;
 import at.ac.tuwien.foop.server.game.player.Player;
 
@@ -30,34 +29,24 @@ public class Tunnel implements GameEnvironment {
      */
     private Collection<Position> positions;
 
-    private GameModel gameModel;
-
     private Map<Position, GameEnvironment> tunnelExitMap;
 
     @Override
     public void enterEnvironment(Player player) {
         subscribedPlayers.add(player);
+        notifyStateChanges();
     }
 
     @Override
     public void leaveEnvironment(Player player) {
         subscribedPlayers.remove(player);
-    }
-
-    @Override
-    public void setGameModel(GameModel gameModel) {
-        this.gameModel = gameModel;
         notifyStateChanges();
     }
 
-    @Override
-    public GameModel getGameModel() {
-        return gameModel;
-    }
 
     @Override
     public void notifyStateChanges() {
-        subscribedPlayers.forEach(player -> player.setKnownState(gameModel));
+        // TODO update world view of all present players
     }
 
     @Override

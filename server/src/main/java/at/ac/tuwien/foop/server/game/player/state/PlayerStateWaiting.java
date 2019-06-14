@@ -1,11 +1,11 @@
-package at.ac.tuwien.foop.server.game.state;
+package at.ac.tuwien.foop.server.game.player.state;
 
-public class PlayerStateDead implements PlayerState {
+public class PlayerStateWaiting implements PlayerState {
 
     private static final String PLAYER_STATE = "DEAD";
 
     @Override
-    public boolean isDead() {
+    public boolean isReady() {
         return true;
     }
 

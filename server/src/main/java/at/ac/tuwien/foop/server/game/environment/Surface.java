@@ -1,6 +1,5 @@
 package at.ac.tuwien.foop.server.game.environment;
 
-import at.ac.tuwien.foop.server.game.GameModel;
 import at.ac.tuwien.foop.server.game.Position;
 import at.ac.tuwien.foop.server.game.player.Player;
 
@@ -9,8 +8,6 @@ import java.util.HashSet;
 import java.util.Map;
 
 public class Surface implements GameEnvironment {
-
-    private GameModel gameModel;
 
     /**
      * data structure to manage subscribed players
@@ -30,26 +27,18 @@ public class Surface implements GameEnvironment {
     @Override
     public void enterEnvironment(Player player) {
         subscribedPlayers.add(player);
+        notifyStateChanges();
     }
 
     @Override
     public void leaveEnvironment(Player player) {
         subscribedPlayers.remove(player);
-    }
-
-    @Override
-    public void setGameModel(GameModel gameModel) {
-        this.gameModel = gameModel;
-    }
-
-    @Override
-    public GameModel getGameModel() {
-        return gameModel;
+        notifyStateChanges();
     }
 
     @Override
     public void notifyStateChanges() {
-        subscribedPlayers.forEach(player -> player.setKnownState(gameModel));
+        // TODO update world view of all present players
     }
 
     @Override

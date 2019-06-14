@@ -18,7 +18,7 @@ public class GameUtils {
                 Math.abs(position1.getYPosition() - position2.getYPosition());
     }
 
-    static Pair<Surface, Collection<Tunnel>> getGameField() {
+    static Pair<Surface, List<Tunnel>> getGameField() {
 
         int xDimensions = 10;
         int yDimensions = 10;
@@ -57,6 +57,6 @@ public class GameUtils {
         tunnel1.setupEnvironment(tunnel1Area, tunnelExits);
         surface.setupEnvironment(allGlobalPositions, tunnelEntries);
 
-        return Pair.of(surface, Set.of(tunnel1));
+        return Pair.of(surface, List.of(tunnel1));
     }
 }

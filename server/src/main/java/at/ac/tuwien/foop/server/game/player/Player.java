@@ -1,10 +1,10 @@
 package at.ac.tuwien.foop.server.game.player;
 
-import at.ac.tuwien.foop.server.game.GameModel;
+import at.ac.tuwien.foop.server.game.GameView;
 import at.ac.tuwien.foop.server.game.Position;
 import at.ac.tuwien.foop.server.game.environment.GameEnvironment;
 import at.ac.tuwien.foop.server.game.movement.MovementStrategy;
-import at.ac.tuwien.foop.server.game.state.*;
+import at.ac.tuwien.foop.server.game.player.state.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,7 +25,7 @@ public class Player {
     private String name;
     private Long id;
     private Position position;
-    private GameModel knownState;
+    private GameView knownStatus;
     private MovementStrategy movementStrategy;
     private GameEnvironment currentEnvironment;
     private PlayerState currentState;

@@ -1,4 +1,4 @@
-package at.ac.tuwien.foop.server.game.state;
+package at.ac.tuwien.foop.server.game.player.state;
 
 public class PlayerStateWon implements PlayerState {
 

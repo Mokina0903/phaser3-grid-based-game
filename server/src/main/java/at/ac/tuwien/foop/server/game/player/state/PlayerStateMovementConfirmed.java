@@ -1,4 +1,4 @@
-package at.ac.tuwien.foop.server.game.state;
+package at.ac.tuwien.foop.server.game.player.state;
 
 import at.ac.tuwien.foop.server.game.Position;
 import at.ac.tuwien.foop.server.game.environment.GameEnvironment;
