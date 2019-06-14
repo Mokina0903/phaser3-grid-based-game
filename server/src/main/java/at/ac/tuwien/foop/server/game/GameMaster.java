@@ -9,6 +9,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.security.SecureRandom;
 import java.util.Collection;
 import java.util.List;
@@ -151,6 +152,11 @@ public class GameMaster {
         return getMiceStream()
                 .filter(Predicate.not(Player::isDead))
                 .allMatch(mouse -> targetTunnel.isPlayerPresent(mouse));
+    }
+
+    @PostConstruct
+    void initialize() {
+        currentGameState = new GameStatePreGame();
     }
 
     enum Turn {
