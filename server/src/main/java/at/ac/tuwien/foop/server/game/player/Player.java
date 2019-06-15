@@ -5,6 +5,7 @@ import at.ac.tuwien.foop.server.game.Position;
 import at.ac.tuwien.foop.server.game.environment.GameEnvironment;
 import at.ac.tuwien.foop.server.game.movement.MovementStrategy;
 import at.ac.tuwien.foop.server.game.player.state.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -106,14 +107,17 @@ public class Player {
 
     // Helper methods
 
+    @JsonIgnore
     public boolean isReadyForGame() {
         return currentState.isReadyForGame();
     }
 
+    @JsonIgnore
     public boolean isReadyForTurn() {
         return currentState.isReadyForTurn();
     }
 
+    @JsonIgnore
     public boolean isDead() {
         return currentState.isDead();
     }
