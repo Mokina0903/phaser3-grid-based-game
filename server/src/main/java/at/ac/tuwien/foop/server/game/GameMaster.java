@@ -56,13 +56,35 @@ public class GameMaster implements GameState {
     /**
      * builds game environments i.e. builds the surface level and all tunnels
      */
-    void buildGame() {
+    private void buildGame() {
         Pair<Surface, List<Tunnel>> gameField = GameUtils.getGameField();
         surface = gameField.getKey();
         tunnels = gameField.getRight();
 
         SecureRandom secureRandom = new SecureRandom();
         targetTunnel = gameField.getRight().get(secureRandom.nextInt(gameField.getRight().size()));
+    }
+
+    private void placePlayers() {
+        // TODO randomly place players on map
+    }
+
+    private void startGame() {
+        SecureRandom random = new SecureRandom();
+        int randomNumber = random.nextInt(2);
+
+        if (randomNumber == 0) {
+            // Cats start
+            allPlayers().filter(Player::isCat).forEach(Player::setPreparingMovement);
+            allPlayers().filter(Player::isMouse).forEach(Player::setWaiting);
+        }
+        else {
+            // Mice start
+            allPlayers().filter(Player::isMouse).forEach(Player::setPreparingMovement);
+            allPlayers().filter(Player::isCat).forEach(Player::setWaiting);
+        }
+
+        currentGameState = new GameStateInGame();
     }
 
     private void endRoundIfAllPlayersHaveConfirmedMovement() {
@@ -95,21 +117,9 @@ public class GameMaster implements GameState {
 
     private void buildAndStartGameIfAllAreReady() {
         if (allPlayers().allMatch(Player::isReadyForGame)) {
-            SecureRandom random = new SecureRandom();
-            int randomNumber = random.nextInt(2);
-
-            if (randomNumber == 0) {
-                // Cats start
-                allPlayers().filter(Player::isCat).forEach(Player::setPreparingMovement);
-                allPlayers().filter(Player::isMouse).forEach(Player::setWaiting);
-            }
-            else {
-                // Mice start
-                allPlayers().filter(Player::isMouse).forEach(Player::setPreparingMovement);
-                allPlayers().filter(Player::isCat).forEach(Player::setWaiting);
-            }
-
-            currentGameState = new GameStateInGame();
+            buildGame();
+            placePlayers();
+            startGame();
         }
     }
 
