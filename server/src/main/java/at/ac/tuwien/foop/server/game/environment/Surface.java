@@ -12,12 +12,12 @@ public class Surface implements GameEnvironment {
     /**
      * data structure to manage subscribed players
      */
-    private Collection<Player> subscribedPlayers = new HashSet<>();
+    private final Collection<Player> subscribedPlayers = new HashSet<>();
 
     /**
      * All global points of the game field this environment uses
      */
-    private Collection<Position> positions;
+    private Collection<Position> positions = new HashSet<>();
 
     /**
      * All entries to tunnels. The Surface (or the players on the surface) do not know, how the tunnels are connected
@@ -25,20 +25,8 @@ public class Surface implements GameEnvironment {
     private Map<Position, GameEnvironment> tunnelEntries;
 
     @Override
-    public void enterEnvironment(Player player) {
-        subscribedPlayers.add(player);
-        notifyStateChanges();
-    }
-
-    @Override
-    public void leaveEnvironment(Player player) {
-        subscribedPlayers.remove(player);
-        notifyStateChanges();
-    }
-
-    @Override
-    public void notifyStateChanges() {
-        // TODO update world view of all present players
+    public Collection<Position> getEnvironmentArea() {
+        return positions;
     }
 
     @Override

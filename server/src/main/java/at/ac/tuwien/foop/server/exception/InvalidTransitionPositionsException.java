@@ -4,6 +4,7 @@ import at.ac.tuwien.foop.server.game.Position;
 
 import java.util.Collection;
 
+@Deprecated
 public class InvalidTransitionPositionsException extends GameException {
 
     public InvalidTransitionPositionsException(Position position, Collection<Position> positions) {

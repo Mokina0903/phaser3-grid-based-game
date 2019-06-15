@@ -66,7 +66,7 @@ public class Player {
         this.currentState = waitingState;
     }
 
-    public void setDead() {
+    private void setDead() {
         this.currentState = deadState;
     }
 
@@ -88,6 +88,20 @@ public class Player {
 
     public void setLost() {
         currentState = lostState;
+    }
+
+    // game view methods
+
+    public void updateKnownPlayerLocation(Player player, GameEnvironment gameEnvironment) {
+        knownStatus.updatePlayerLocation(player, gameEnvironment);
+    }
+
+    public void updateKnownPlayerLocation(Player player, Position position) {
+        knownStatus.updatePlayerLocation(player, position);
+    }
+
+    public void updateKnownPlayerState(Player player, PlayerState playerState) {
+        knownStatus.updatePlayerState(player, playerState);
     }
 
     // Helper methods
@@ -112,12 +126,8 @@ public class Player {
         return movementStrategy.isMouse();
     }
 
-    public void leaveEnvironment() {
-        currentEnvironment.leaveEnvironment(this);
-    }
-
-    public void enterEnvironment(GameEnvironment environment) {
-        environment.enterEnvironment(this);
-        currentEnvironment = environment;
+    public void die() {
+        setDead();
+        currentEnvironment.playerStateChanged(this, currentState);
     }
 }

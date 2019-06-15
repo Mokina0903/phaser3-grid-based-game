@@ -4,7 +4,6 @@ package at.ac.tuwien.foop.server.endpoint;
 import at.ac.tuwien.foop.server.dto.EmptyRequest;
 import at.ac.tuwien.foop.server.dto.MovementRequest;
 import at.ac.tuwien.foop.server.exception.GameException;
-import at.ac.tuwien.foop.server.game.player.Player;
 import at.ac.tuwien.foop.server.service.GameService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

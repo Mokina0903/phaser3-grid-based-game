@@ -4,7 +4,7 @@ import at.ac.tuwien.foop.server.game.environment.GameEnvironment;
 
 import java.util.Collection;
 
-public class GameModel {
+class GameModel {
 
     private Collection<GameEnvironment> environments;
 

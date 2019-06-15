@@ -12,7 +12,6 @@ import at.ac.tuwien.foop.server.game.state.GameStatePreGame;
 import at.ac.tuwien.foop.server.repository.PlayerRepository;
 import at.ac.tuwien.foop.server.service.TokenService;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -78,7 +77,7 @@ public class GameMaster implements GameState {
                 getCatStream().forEach(Player::setPreparingMovement);
             }
 
-            getKilledPlayers().forEach(Player::setDead);
+            getKilledPlayers().forEach(Player::die);
 
             if (allMiceDead()) {
                 getMiceStream().forEach(Player::setLost);
@@ -128,12 +127,6 @@ public class GameMaster implements GameState {
 
     private void broadcastGameState() {
         // TODO
-    }
-
-    private Environment findTunnelForPosition(Position position) {
-        // TODO
-
-        return null;
     }
 
     private void switchTurn() {

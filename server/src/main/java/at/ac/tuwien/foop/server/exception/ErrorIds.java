@@ -11,8 +11,10 @@ final class ErrorIds {
     static final Integer PLAYER_NOT_FOUND = 5;
     static final Integer NO_MOVEMENT_PREPARED = 6;
     static final Integer BAD_REQUEST = 7;
-    static final Integer NO_MOVEMENT_PREPARED = 8;
-    static final Integer INVALID_PLAYER_STATE = 9;
-    static final Integer ILLEGAL_OPERATION_FOR_PLAYER_STATE = 10;
-    static final Integer ILLEGAL_OPERATION_FOR_GAME_STATE = 11;
+    @Deprecated
+    static final Integer INVALID_PLAYER_STATE = 8;
+    static final Integer ILLEGAL_OPERATION_FOR_PLAYER_STATE = 9;
+    static final Integer ILLEGAL_OPERATION_FOR_GAME_STATE = 10;
+    static final Integer POSITION_NOT_IN_ENVIRONMENT = 11;
+    static final Integer PLAYER_NOT_IN_ENVIRONMENT = 12;
 }

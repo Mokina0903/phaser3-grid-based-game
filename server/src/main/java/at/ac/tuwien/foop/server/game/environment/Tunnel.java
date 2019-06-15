@@ -12,7 +12,7 @@ public class Tunnel implements GameEnvironment {
     /**
      * data structure to manage subscribed players
      */
-    private Collection<Player> subscribedPlayers = new HashSet<>();
+    private final Collection<Player> subscribedPlayers = new HashSet<>();
 
     /**
      * All global points of the game field this environment uses
@@ -27,26 +27,13 @@ public class Tunnel implements GameEnvironment {
      * the tunnel environment instance would have the coordinates (Positions) [{0,0}, {0,1}]
      * So for a player, or the GameMaster its important to know the global position and also the environment a player is in
      */
-    private Collection<Position> positions;
+    private Collection<Position> positions = new HashSet<>();
 
     private Map<Position, GameEnvironment> tunnelExitMap;
 
     @Override
-    public void enterEnvironment(Player player) {
-        subscribedPlayers.add(player);
-        notifyStateChanges();
-    }
-
-    @Override
-    public void leaveEnvironment(Player player) {
-        subscribedPlayers.remove(player);
-        notifyStateChanges();
-    }
-
-
-    @Override
-    public void notifyStateChanges() {
-        // TODO update world view of all present players
+    public Collection<Position> getEnvironmentArea() {
+        return positions;
     }
 
     @Override
