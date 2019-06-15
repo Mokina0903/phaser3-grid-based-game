@@ -19,7 +19,7 @@ public class PlayerController {
     @SendTo("/topic/addPlayer")
     public Response addPlayer(String sessionId) {
         Long playerId = getPlayerId(sessionId);
-        LOG.info("Adding Player " + playerId);
+        LOG.info("Adding Player {}", playerId);
         return Response.builder()
                 .message("Player" + playerId + " joined the Game!")
                 .build();

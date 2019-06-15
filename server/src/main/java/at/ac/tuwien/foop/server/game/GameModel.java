@@ -4,8 +4,8 @@ import at.ac.tuwien.foop.server.game.environment.GameEnvironment;
 
 import java.util.Collection;
 
-public class GameState {
+class GameModel {
 
-    Collection<GameEnvironment> environments;
+    private Collection<GameEnvironment> environments;
 
 }

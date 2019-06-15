@@ -1,52 +1,47 @@
 package at.ac.tuwien.foop.server.game.environment;
 
-import at.ac.tuwien.foop.server.game.GameState;
 import at.ac.tuwien.foop.server.game.Position;
 import at.ac.tuwien.foop.server.game.player.Player;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Map;
 
 public class Surface implements GameEnvironment {
 
     /**
      * data structure to manage subscribed players
      */
-    Collection<Player> subscribedPlayers;
+    private final Collection<Player> subscribedPlayers = new HashSet<>();
 
     /**
      * All global points of the game field this environment uses
      */
-    Collection<Position> positions;
+    private Collection<Position> positions = new HashSet<>();
+
+    /**
+     * All entries to tunnels. The Surface (or the players on the surface) do not know, how the tunnels are connected
+     */
+    private Map<Position, GameEnvironment> tunnelEntries;
 
     @Override
-    public void enterEnvironment(Player player) {
-        // TODO
-    }
-
-    @Override
-    public void leaveEnvironment(Player player) {
-        // TODO
-    }
-
-    @Override
-    public void setGameState(GameState gameState) {
-        // TODO
-    }
-
-    @Override
-    public GameState getGameState() {
-        // TODO
-        return null;
-    }
-
-    @Override
-    public void notifyStateChanges() {
-        // TODO
+    public Collection<Position> getEnvironmentArea() {
+        return positions;
     }
 
     @Override
     public Collection<Player> getPresentPlayers() {
-        // TODO
-        return null;
+        return subscribedPlayers;
+    }
+
+    @Override
+    public Map<Position, GameEnvironment> getEnvironmentTransitionMap() {
+        return tunnelEntries;
+    }
+
+    @Override
+    public void setupEnvironment(Collection<Position> environmentArea, Map<Position, GameEnvironment> environmentTransitionMap) {
+        positions = environmentArea;
+        tunnelEntries = environmentTransitionMap;
     }
 }

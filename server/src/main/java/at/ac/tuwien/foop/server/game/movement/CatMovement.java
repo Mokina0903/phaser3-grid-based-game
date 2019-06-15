@@ -12,20 +12,18 @@ public class CatMovement implements MovementStrategy {
      */
     private static final int MOVEMENT_SPEED = 2;
 
-    private final Player player;
-
     @Override
-    public void prepareMovement(Player player, Position targetPosition) {
-        // TODO
-    }
-
-    @Override
-    public void move(Player player) {
-        // TODO
+    public void validatePrepareMovement(Player player, Position targetPosition) {
+        validateMovementPossible(player, targetPosition);
     }
 
     @Override
     public int getMovementSpeed() {
         return MOVEMENT_SPEED;
+    }
+
+    @Override
+    public boolean isCat() {
+        return true;
     }
 }
