@@ -199,6 +199,11 @@ public class GameMaster implements GameState {
         return readyPlayer;
     }
 
+    //todo override?
+    public Collection<Player> getAllPlayers() {
+        return playerRepository.findAll();
+    }
+
     @Override
     public void prepareMovement(Player player, Position targetLocation) {
         currentGameState.prepareMovement(player, targetLocation);

@@ -10,6 +10,8 @@ import at.ac.tuwien.foop.server.repository.PlayerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+
 
 @Service
 @AllArgsConstructor
@@ -28,5 +30,9 @@ public class PrepareService {
 
     public Player setPlayerReady(Long id) {
         return gameMaster.setPlayerReadyForGame(playerRepository.findById(id).orElseThrow(() -> new PlayerNotFoundException(id)));
+    }
+
+    public Collection<Player> getAllPlayers() {
+        return gameMaster.getAllPlayers();
     }
 }
