@@ -1,11 +1,16 @@
 package at.ac.tuwien.foop.server.game;
 
+import at.ac.tuwien.foop.server.dto.LoginResponse;
+import at.ac.tuwien.foop.server.dto.PlayerRequest;
 import at.ac.tuwien.foop.server.game.environment.Surface;
 import at.ac.tuwien.foop.server.game.environment.Tunnel;
 import at.ac.tuwien.foop.server.game.player.Player;
 import at.ac.tuwien.foop.server.game.state.GameState;
+import at.ac.tuwien.foop.server.game.state.GameStateInGame;
 import at.ac.tuwien.foop.server.game.state.GameStatePostGame;
 import at.ac.tuwien.foop.server.game.state.GameStatePreGame;
+import at.ac.tuwien.foop.server.repository.PlayerRepository;
+import at.ac.tuwien.foop.server.service.TokenService;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -28,7 +33,10 @@ import java.util.stream.Stream;
  * The GameMaster expects already validated client data. Therefore the validations should be done in the 'Services'
  */
 @Component
-public class GameMaster {
+public class GameMaster implements GameState {
+
+    private final TokenService tokenService;
+    private final PlayerRepository playerRepository;
 
     /**
      * The state of the game that contains all environments and all the data about all the players in these environments
@@ -36,22 +44,29 @@ public class GameMaster {
     private GameModel gameModel;
     private Surface surface;
     private Collection<Tunnel> tunnels;
-    private Collection<Player> loggedInPlayers;
     private Turn currentTurn;
     private Tunnel targetTunnel;
 
-    private GameState currentGameState = new GameStatePreGame();
+    private GameState currentGameState;
 
-    /**
-     * Registers player to the current game
-     *
-     * @param player
-     */
-    void registerPlayer(Player player) {
-        // TODO
+    public GameMaster(TokenService tokenService, PlayerRepository playerRepository) {
+        this.tokenService = tokenService;
+        this.playerRepository = playerRepository;
     }
 
-    public void endRoundIfAllPlayersHaveConfirmedMovement() {
+    /**
+     * builds game environments i.e. builds the surface level and all tunnels
+     */
+    void buildGame() {
+        Pair<Surface, List<Tunnel>> gameField = GameUtils.getGameField();
+        surface = gameField.getKey();
+        tunnels = gameField.getRight();
+
+        SecureRandom secureRandom = new SecureRandom();
+        targetTunnel = gameField.getRight().get(secureRandom.nextInt(gameField.getRight().size()));
+    }
+
+    private void endRoundIfAllPlayersHaveConfirmedMovement() {
         if (allPlayersInThisRoundReady()) {
             switchTurn();
 
@@ -70,8 +85,7 @@ public class GameMaster {
                 getCatStream().forEach(Player::setWon);
 
                 currentGameState = new GameStatePostGame();
-            }
-            else if (allLivingMiceInTargetTunnel()) {
+            } else if (allLivingMiceInTargetTunnel()) {
                 getMiceStream().forEach(Player::setWon);
                 getCatStream().forEach(Player::setLost);
 
@@ -80,31 +94,35 @@ public class GameMaster {
         }
     }
 
-    /**
-     * builds game environments i.e. builds the surface level and all tunnels
-     */
-    void buildGame() {
-        Pair<Surface, List<Tunnel>> gameField = GameUtils.getGameField();
-        surface = gameField.getKey();
-        tunnels = gameField.getRight();
+    private void buildAndStartGameIfAllAreReady() {
+        if (allPlayers().allMatch(Player::isReadyForGame)) {
+            SecureRandom random = new SecureRandom();
+            int randomNumber = random.nextInt(2);
 
-        SecureRandom secureRandom = new SecureRandom();
-        targetTunnel = gameField.getRight().get(secureRandom.nextInt(gameField.getRight().size()));
-    }
+            if (randomNumber == 0) {
+                // Cats start
+                allPlayers().filter(Player::isCat).forEach(Player::setPreparingMovement);
+                allPlayers().filter(Player::isMouse).forEach(Player::setWaiting);
+            }
+            else {
+                // Mice start
+                allPlayers().filter(Player::isMouse).forEach(Player::setPreparingMovement);
+                allPlayers().filter(Player::isCat).forEach(Player::setWaiting);
+            }
 
-    public GameState getCurrentGameState() {
-        return currentGameState;
+            currentGameState = new GameStateInGame();
+        }
     }
 
     private boolean allPlayersInThisRoundReady() {
         if (currentTurn.equals(Turn.CAT_TURN)) {
-            return loggedInPlayers.stream()
+            return allPlayers()
                     .filter(Player::isCat)
-                    .allMatch(Player::isReady);
+                    .allMatch(Player::isReadyForTurn);
         } else if (currentTurn.equals(Turn.MOUSE_TURN)) {
-            return loggedInPlayers.stream()
+            return allPlayers()
                     .filter(Player::isMouse)
-                    .allMatch(Player::isReady);
+                    .allMatch(Player::isReadyForTurn);
         } else throw new IllegalStateException();
     }
 
@@ -127,14 +145,12 @@ public class GameMaster {
     }
 
     private Stream<Player> getMiceStream() {
-        return loggedInPlayers
-                .stream()
+        return allPlayers()
                 .filter(Player::isMouse);
     }
 
     private Stream<Player> getCatStream() {
-        return loggedInPlayers
-                .stream()
+        return allPlayers()
                 .filter(Player::isCat);
     }
 
@@ -159,9 +175,46 @@ public class GameMaster {
                 .allMatch(mouse -> targetTunnel.isPlayerPresent(mouse));
     }
 
+    private Stream<Player> allPlayers() {
+        return playerRepository.findAll().stream();
+    }
+
+    @Override
+    public LoginResponse createPlayer(String name) {
+        return currentGameState.createPlayer(name);
+    }
+
+    @Override
+    public Player updatePlayer(PlayerRequest playerRequest) {
+        return currentGameState.updatePlayer(playerRequest);
+    }
+
+    @Override
+    public Player setPlayerReadyForGame(Player player) {
+        Player readyPlayer = currentGameState.setPlayerReadyForGame(player);
+        buildAndStartGameIfAllAreReady();
+        return readyPlayer;
+    }
+
+    @Override
+    public void prepareMovement(Player player, Position targetLocation) {
+        currentGameState.prepareMovement(player, targetLocation);
+    }
+
+    @Override
+    public void confirmMovement(Player player) {
+        currentGameState.confirmMovement(player);
+        endRoundIfAllPlayersHaveConfirmedMovement();
+    }
+
+    @Override
+    public String getGameState() {
+        return currentGameState.getGameState();
+    }
+
     @PostConstruct
     void initialize() {
-        currentGameState = new GameStatePreGame();
+        currentGameState = new GameStatePreGame(playerRepository, tokenService);
     }
 
     enum Turn {

@@ -12,20 +12,15 @@ import org.springframework.stereotype.Component;
 public class GameService {
 
     private final GameMaster gameMaster;
+    private final TokenService tokenService;
 
     public void prepareMovement(MovementRequest movementRequest) {
-        Player player = getPlayerForToken(movementRequest.getToken());
-        gameMaster.getCurrentGameState().prepareMovement(player, movementRequest.toPosition());
+        Player player = tokenService.getPlayer(movementRequest.getToken());
+        gameMaster.prepareMovement(player, movementRequest.toPosition());
     }
 
     public void confirmMovement(EmptyRequest emptyRequest) {
-        Player player = getPlayerForToken(emptyRequest.getToken());
-        gameMaster.getCurrentGameState().confirmMovement(player);
-        gameMaster.endRoundIfAllPlayersHaveConfirmedMovement();
-    }
-
-    private static Player getPlayerForToken(String token) {
-        // TODO Dummy method. Replace with real method, as soon as Robin is done
-        return null;
+        Player player = tokenService.getPlayer(emptyRequest.getToken());
+        gameMaster.confirmMovement(player);
     }
 }

@@ -14,7 +14,7 @@ public class PlayerStateMovementConfirmed implements PlayerState {
     private final Position targetLocation;
 
     @Override
-    public boolean isReady() {
+    public boolean isReadyForTurn() {
         return true;
     }
 

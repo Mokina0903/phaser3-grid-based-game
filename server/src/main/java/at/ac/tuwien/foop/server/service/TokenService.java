@@ -40,7 +40,7 @@ public class TokenService {
                 .compact();
     }
 
-    public Player getPlayerId(String token) {
+    Player getPlayer(String token) {
         Claims claims;
         try {
             claims = Jwts.parser()

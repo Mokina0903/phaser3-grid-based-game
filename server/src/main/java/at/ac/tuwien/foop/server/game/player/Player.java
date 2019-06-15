@@ -18,22 +18,20 @@ import javax.validation.constraints.NotNull;
 @Builder
 public class Player {
 
-    @NotNull
     private final PlayerState waitingState = new PlayerStateWaiting();
     private final PlayerState deadState = new PlayerStateDead();
     private final PlayerState preparingMovementState = new PlayerStatePreparingMovement(this);
     private final PlayerState wonState = new PlayerStateWon();
     private final PlayerState lostState = new PlayerStateLost();
+    private final PlayerState readyForGameState = new PlayerStateReadyForGame();
 
-    private String name;
+    @NotNull
     private Long id;
 
     @NotNull
     private String name;
 
     private Position position;
-
-    private GameState knownState;
 
     @NotNull
     private GameView knownStatus;
@@ -44,12 +42,24 @@ public class Player {
 
     private PlayerState currentState;
 
+    // player actions that are dependent on player state
+
     public void prepareMovement(Position targetLocation) {
         currentState.prepareMovement(targetLocation);
     }
 
     public void confirmMovement() {
         currentState.confirmMovement();
+    }
+
+    public void move() {
+        currentState.move();
+    }
+
+    // Player state progression
+
+    public void setPlayerReady() {
+        currentState.setPlayerReady();
     }
 
     public void setWaiting() {
@@ -80,8 +90,14 @@ public class Player {
         currentState = lostState;
     }
 
-    public boolean isReady() {
-        return currentState.isReady();
+    // Helper methods
+
+    public boolean isReadyForGame() {
+        return currentState.isReadyForGame();
+    }
+
+    public boolean isReadyForTurn() {
+        return currentState.isReadyForTurn();
     }
 
     public boolean isDead() {
@@ -94,10 +110,6 @@ public class Player {
 
     public boolean isMouse() {
         return movementStrategy.isMouse();
-    }
-
-    public void move() {
-        currentState.move();
     }
 
     public void leaveEnvironment() {

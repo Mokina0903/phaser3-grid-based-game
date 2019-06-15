@@ -5,7 +5,7 @@ public class PlayerStateWaiting implements PlayerState {
     private static final String PLAYER_STATE = "DEAD";
 
     @Override
-    public boolean isReady() {
+    public boolean isReadyForTurn() {
         return true;
     }
 

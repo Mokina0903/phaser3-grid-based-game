@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.security.SecureRandom;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -49,7 +50,7 @@ public class PlayerRepository {
                 .id(id)
                 .name(name)
                 .build();
-        MovementStrategy movementStrategy = random.nextBoolean() ? new CatMovement(newPlayer) : new MouseMovement(newPlayer);
+        MovementStrategy movementStrategy = random.nextBoolean() ? new CatMovement() : new MouseMovement();
         newPlayer.setMovementStrategy(movementStrategy);
         playersLock.writeLock().lock();
         Player previousPlayer = players.putIfAbsent(id, newPlayer);
@@ -70,5 +71,12 @@ public class PlayerRepository {
         }
         log.info("Updated player with id {}", player.getId());
         return updatedPlayer;
+    }
+
+    public Collection<Player> findAll() {
+        playersLock.readLock().lock();
+        Collection<Player> playerList = players.values();
+        playersLock.readLock().unlock();
+        return playerList;
     }
 }
