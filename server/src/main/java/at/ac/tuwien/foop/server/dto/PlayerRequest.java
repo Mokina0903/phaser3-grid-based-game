@@ -2,13 +2,13 @@ package at.ac.tuwien.foop.server.dto;
 
 
 import at.ac.tuwien.foop.server.game.player.Player;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Builder
 @EqualsAndHashCode(callSuper = true)
