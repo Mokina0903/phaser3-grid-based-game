@@ -13,25 +13,12 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
+import static at.ac.tuwien.foop.server.util.Constants.*;
+
 @Controller
 @Slf4j
 @AllArgsConstructor
 public class GameController {
-
-    /**
-     * Broadcast topics. Clients will subscribe to this topic
-     * The server makes sure every client gets the right kind of game state information.
-     * i.e. the server knows, when a player is up top or in a tunnel and send fitting game state information for the player
-     */
-    private static final String TOPIC_GAME_STATE = "/topic/state";
-    private static final String TOPIC_PLAYERS = "/topic/players";
-
-    /**
-     * Endpoints. (Pls change, if the names are stupid)
-     */
-    private static final String MOVEMENT_ENDPOINT = "/validatePrepareMovement";
-    private static final String CONFIRM_MOVEMENT_ENDPOINT = MOVEMENT_ENDPOINT + "/confirm";
-    private static final String LOGIN_ENDPOINT = "/login";
 
     private final GameService gameService;
 
@@ -45,7 +32,6 @@ public class GameController {
      * @return the future state the game will have, if the movement is confirmed
      * @throws at.ac.tuwien.foop.server.exception.GameException if something went wrong (validation failed, future state could not be validated)
      */
-
     @MessageMapping(MOVEMENT_ENDPOINT)
     @SendTo(TOPIC_GAME_STATE)
     public void prepareMovement(MovementRequest movementRequest) {
@@ -68,20 +54,6 @@ public class GameController {
     public void confirmMovement(EmptyRequest emptyRequest) {
         log.info("Receiving confirmation request");
         gameService.confirmMovement(emptyRequest);
-    }
-
-    /**
-     * Logs in new player
-     *
-     * @param player the player to be logged in. ID should not be set. IDs are assigned by the server
-     * @return the newly logged in player (with ID). The new player will be broadcasted to all clients that subscribe to
-     * '/topic/players' aka all players
-     */
-    @MessageMapping(LOGIN_ENDPOINT)
-    @SendTo(TOPIC_PLAYERS)
-    public Player login(Player player) {
-        log.info("Receiving login request from player: {}", player);
-        return player;
     }
 
     /**

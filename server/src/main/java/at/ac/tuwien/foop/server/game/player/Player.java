@@ -10,12 +10,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Player {
 
+    @NotNull
     private final PlayerState waitingState = new PlayerStateWaiting();
     private final PlayerState deadState = new PlayerStateDead();
     private final PlayerState preparingMovementState = new PlayerStatePreparingMovement(this);
@@ -24,10 +27,21 @@ public class Player {
 
     private String name;
     private Long id;
+
+    @NotNull
+    private String name;
+
     private Position position;
+
+    private GameState knownState;
+
+    @NotNull
     private GameView knownStatus;
+
     private MovementStrategy movementStrategy;
+
     private GameEnvironment currentEnvironment;
+
     private PlayerState currentState;
 
     public void prepareMovement(Position targetLocation) {
