@@ -22,10 +22,18 @@ export default class ClientApplication {
             mode: 'no-cors',
             headers: {"Content-Type": "application/json; charset=utf-8"},
             method: 'POST',
-            body: JSON.stringify({
-                name: 'Chuck norris'
-            })
+            body: 'ChuckNorris'
         }).then(response => console.log("added player response: " + response));
+    }
+
+    // character is mouse or cat
+    setCharacterOfPlayer(character) {
+        fetch(this.serverAddress + "/players/char", {
+            mode: 'no-cors',
+            headers: {"Content-Type": "application/json; charset=utf-8"},
+            method: 'PATCH',
+            body: character
+        }).then(() => console.log("set player chat to: " + character));
     }
 
     getAllPlayers() {

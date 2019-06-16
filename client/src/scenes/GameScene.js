@@ -37,14 +37,15 @@ class GameScene extends Phaser.Scene {
             debug: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
         };
 
-        this.spawnPoint = this.map.findObject('Objects', obj => obj.name === 'Spawn Point');
+        this.spawnPoint = this.map.getObjectLayer('Objects').objects;
 
         // CREATE PLAYER!!!
+        //todo create group in titleScene and iterate over spawn points
         this.player = new Player({
             scene: this,
             key: 'player',
-            x: this.spawnPoint.x,
-            y: this.spawnPoint.y
+            x: this.spawnPoint[1].x,
+            y: this.spawnPoint[1].y
         });
 
         this.worldLayer.setCollisionByProperty({
