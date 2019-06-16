@@ -52,7 +52,14 @@ export default class Player extends Phaser.GameObjects.Sprite {
         } else {
             this.anims.stop();
         }
+    }
 
+    freeze() {
+        this.body.moves = false;
+    }
+
+    moveOneStep(){
+        this.body.setVelocityY(100);
     }
 
     die() {

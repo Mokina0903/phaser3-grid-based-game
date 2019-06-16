@@ -19,9 +19,10 @@ class GameScene extends Phaser.Scene {
         });
         this.tileset = this.map.addTilesetImage('tileset', 'tiles');
 
+        this.cave1Layer = this.map.createStaticLayer('Cave1', this.tileset, 0, 0);
         this.belowLayer = this.map.createStaticLayer('Below Player', this.tileset, 0, 0);
         this.worldLayer = this.map.createStaticLayer('World', this.tileset, 0, 0);
-        this.holeLayer = this.map.createStaticLayer('Holes', this.tileset, 0, 0);
+        const HOLE = 25;
 
         // this.gridPhysics.world.enable(this.belowLayer);
 
@@ -48,11 +49,9 @@ class GameScene extends Phaser.Scene {
             y: this.spawnPoint[1].y
         });
 
-        this.worldLayer.setCollisionByProperty({
-            collides: true
-        });
 
-        this.worldLayer.setCollisionByExclusion([-1]);
+        this.worldLayer.setCollisionByExclusion([-1, HOLE]);
+        this.worldLayer.setTileIndexCallback(HOLE, this.goIntoCave, this);
 
         this.physics.add.collider(this.player, this.worldLayer);
 
@@ -88,6 +87,26 @@ class GameScene extends Phaser.Scene {
                 faceColor: new Phaser.Display.Color(40, 39, 37, 255) // Color of colliding face edges
             });
         });
+    }
+
+    goIntoCave() {
+        console.log("Entering cave...")
+        this.player.moveOneStep();
+        const cam = this.cameras.main;
+        cam.fade(250, 0, 0, 0);
+        cam.once("camerafadeoutcomplete", () => {
+            this.belowLayer.setVisible(false);
+            this.worldLayer.setVisible(false);
+            //this.cave1Layer.setVisible(true);
+            //this.player.destroy();
+            //this.restart();
+        });
+        cam.fade(150, 255, 255, 255);
+
+        /*this.belowLayer.destroy(false);
+        this.cave1Layer = this.map.createStaticLayer('Cave1', this.tileset, 0, 0);
+        //this.map.setLayer(this.cave1Layer);
+        //this.holeLayer = this.map.createStaticLayer('Holes', this.tileset, 0, 0);*/
     }
 
     update(time, delta) {
