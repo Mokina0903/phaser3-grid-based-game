@@ -47,45 +47,28 @@ class TitleScene extends Phaser.Scene {
         this.characterType = "";
         this.selectMouse(true);
 
-
-        // highlite selection, but circle does not update
-        this.mouseSprite.setDepth(10);
-        this.catSprite.setDepth(10);
-        this.graphics = this.add.graphics({ fillStyle: { color: 0xffffff } });
-        this.circle = new Phaser.Geom.Circle(this.mouseSprite.x, this.mouseSprite.y, 16);
-        this.graphics.fillCircleShape(this.circle);
-
         this.leftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         this.rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
-        this.pressX = this.add.bitmapText(16 * 8 + 4, 8 * 16, 'font', 'PRESS X TO START', 8);
-
-        async function getPlayers(client) {
-
-         /*   await fetch(client.getAllPlayers())
-                .then(response => {
-
-                    if (response.status === 200) {
-                        console.log("respodaadasdod " + response.body)
-                        return response.body
-                    } else {
-                        throw response.body
-                    }
-                })
-                  /!*  var players = result.data;
-                    console.log("all my nice players: " + result.body);
-                    return players;*!/*/
-        }
-
-        this.response = getPlayers(this.client);
-
-        //todo get all players and add text
-
+        this.add.bitmapText(16 * 7, 6 * 16, 'font', 'CHOOSE YOUR CHARACTER', 8);
+        this.pressX = this.add.bitmapText(16 * 8 + 4, 8 * 16, 'font', 'PRESS X IF READY', 8);
+        this.playerList = '';
         this.blink = 1000;
 
         this.startKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
+
+        fetch(this.client.getAllPlayers())
+            .then(response => {
+                console.log("All my players: " + response)
+                this.updatePlayerList(response);
+            });
+        console.log(this.playerList);
+        //todo get all players and add text
     }
 
+    updatePlayerList(players) {
+        console.log("update players method...")
+    }
 
     update(time, delta) {
         if (this.registry.get('restartScene')) {
@@ -98,10 +81,12 @@ class TitleScene extends Phaser.Scene {
         }
 
         if(this.leftKey.isDown) {
+          //  this.graphicsOff.fillCircleShape(this.circle);
             this.selectMouse(true);
         }
 
         if(this.rightKey.isDown) {
+            //this.graphicsOff.fillCircleShape(this.circle);
             this.selectMouse(false);
         }
 
@@ -114,17 +99,15 @@ class TitleScene extends Phaser.Scene {
         if (isMouse) {
             this.mouseSprite.anims.play("mouse_down");
             this.catSprite.anims.stop();
-            this.circle = new Phaser.Geom.Circle(this.mouseSprite.x, this.mouseSprite.y, 16);
+            this.catSprite.setFrame("cat_up");
             this.characterType = "mouse"
         }
         else {
             this.catSprite.anims.play("cat_down");
             this.mouseSprite.anims.stop();
-            this.circle = this.circle.setPosition(this.catSprite.x, this.catSprite.y);
-            this.graphics.fillCircleShape(this.circle);
+            this.mouseSprite.setFrame("mouse_up");
             this.characterType = "cat";
         }
-
     }
 
     startGame() {

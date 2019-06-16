@@ -18,20 +18,25 @@ export default class ClientApplication {
     }
 
     addPlayer() {
-        fetch(this.serverAddress + "/players", {mode: 'no-cors',
+        fetch(this.serverAddress + "/players", {
+            mode: 'no-cors',
             headers: {"Content-Type": "application/json; charset=utf-8"},
             method: 'POST',
             body: JSON.stringify({
-                username: 'Elon Musk',
+                name: 'Chuck norris'
             })
         }).then(response => console.log("added player response: " + response));
     }
 
     getAllPlayers() {
-        fetch(this.serverAddress + '/players', {mode: 'no-cors'})
-            .then(response => response.json())
-            .then(data => console.log("fetching all players in client: " + data));
-        return data;
+        fetch(this.serverAddress + '/players', {
+            mode: 'no-cors',
+            headers: {"Content-Type": "application/json; charset=utf-8"}
+        }).then(response => response.json())
+            .then(data => {
+                console.log("fetching all players in client: " + data);
+                return JSON.parse(data);;
+            });
     }
 
     disconnect() {
