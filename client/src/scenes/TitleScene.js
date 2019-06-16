@@ -47,18 +47,37 @@ class TitleScene extends Phaser.Scene {
         this.characterType = "";
         this.selectMouse(true);
 
-        /*
+
         // highlite selection, but circle does not update
         this.mouseSprite.setDepth(10);
         this.catSprite.setDepth(10);
         this.graphics = this.add.graphics({ fillStyle: { color: 0xffffff } });
         this.circle = new Phaser.Geom.Circle(this.mouseSprite.x, this.mouseSprite.y, 16);
-        this.graphics.fillCircleShape(this.circle);*/
+        this.graphics.fillCircleShape(this.circle);
 
         this.leftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         this.rightKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
 
         this.pressX = this.add.bitmapText(16 * 8 + 4, 8 * 16, 'font', 'PRESS X TO START', 8);
+
+        async function getPlayers(client) {
+
+         /*   await fetch(client.getAllPlayers())
+                .then(response => {
+
+                    if (response.status === 200) {
+                        console.log("respodaadasdod " + response.body)
+                        return response.body
+                    } else {
+                        throw response.body
+                    }
+                })
+                  /!*  var players = result.data;
+                    console.log("all my nice players: " + result.body);
+                    return players;*!/*/
+        }
+
+        this.response = getPlayers(this.client);
 
         //todo get all players and add text
 
@@ -66,6 +85,7 @@ class TitleScene extends Phaser.Scene {
 
         this.startKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
     }
+
 
     update(time, delta) {
         if (this.registry.get('restartScene')) {
@@ -94,13 +114,14 @@ class TitleScene extends Phaser.Scene {
         if (isMouse) {
             this.mouseSprite.anims.play("mouse_down");
             this.catSprite.anims.stop();
-            //this.circle = this.circle.setTo(this.mouseSprite.x, this.mouseSprite.y, 18);
+            this.circle = new Phaser.Geom.Circle(this.mouseSprite.x, this.mouseSprite.y, 16);
             this.characterType = "mouse"
         }
         else {
             this.catSprite.anims.play("cat_down");
             this.mouseSprite.anims.stop();
-            //this.circle = this.circle.setTo(this.catSprite.x, this.catSprite.y, 18);
+            this.circle = this.circle.setPosition(this.catSprite.x, this.catSprite.y);
+            this.graphics.fillCircleShape(this.circle);
             this.characterType = "cat";
         }
 

@@ -1,58 +1,37 @@
 export default class ClientApplication {
 
+
     constructor() {
-        this.socket = new SockJS("http://localhost:8080/ws");
+        this.serverAddress = "http://localhost:8080";
+
+        this.socket = new SockJS(this.serverAddress + "/ws");
         this.stompClient = Stomp.over(this.socket);
 
-        console.log("Tying to connect...");
-        this.stompClient.connect({}, this.connectionSuccess()
+        this.stompClient.connect({}, frame => {
+                console.log("Connected :- " + frame);
+                this.stompClient.subscribe('/topic/addPlayer', notifications =>
+                    alert(notifications));
+                this.addPlayer();
+            }, error =>
+                alert(error)
         );
     }
 
-    connectionSuccess() {
-        setTimeout(() => {
-            this.stompClient.subscribe('/topic/addPlayer',
-                function (addPlayer) {
-                    console.log("Suscribed to /topic/addPlayer");
-                });
-
-            this.addPlayer();
-
-        }, 3000)
-    };
-
     addPlayer() {
-
-        //old websocket style
-        /*this.sessionId = /\/([^\/]+)\/websocket/.exec(this.socket._transport.url)[1];
-        console.log("client sessionid: " + this.sessionId);
-        this.msg = this.stompClient.send("/app/addPlayer", {}, this.sessionId);
-        console.log("print send msg: " + this.msg);*/
-
-        fetch("'http://localhost:8080/players", {
-            method: "post",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            //make sure to serialize your JSON body
+        fetch(this.serverAddress + "/players", {mode: 'no-cors',
+            headers: {"Content-Type": "application/json; charset=utf-8"},
+            method: 'POST',
             body: JSON.stringify({
-                "name": 'myPlayerName',
+                username: 'Elon Musk',
             })
-        })
-            .then( (response) => {
-                console.log("add player rest: " + response);
-            });
+        }).then(response => console.log("added player response: " + response));
     }
 
     getAllPlayers() {
-        const userAction = async () => {
-            const response = await fetch('http://localhost:8080/players');
-            const myJson = await response.json(); //extract JSON from the http response
-            // do something with myJson
-            console.log(myJson);
-            return myJson;
-        }
+        fetch(this.serverAddress + '/players', {mode: 'no-cors'})
+            .then(response => response.json())
+            .then(data => console.log("fetching all players in client: " + data));
+        return data;
     }
 
     disconnect() {
