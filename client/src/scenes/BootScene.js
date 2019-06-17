@@ -2,7 +2,7 @@ import makeAnimations from '../helpers/animations';
 import Client from '../ClientApplication';
 
 class BootScene extends Phaser.Scene {
-    constructor(test) {
+    constructor() {
         super({
             key: 'BootScene'
         });

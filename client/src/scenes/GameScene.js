@@ -7,9 +7,15 @@ class GameScene extends Phaser.Scene {
         });
     }
 
+    init(data) {
+        // todo list of players, list of npcs
+        // todo state if new game or leftCave
+        this.isNewGame = data.newGame;
+    }
+
     preload() {
         // todo plugin for tile based movement?
-       // this.load.scenePlugin('GridPhysics', 'plugins/GridPhysics.min.js', 'gridPhysics', 'gridPhysics');
+        this.load.scenePlugin('GridPhysics', 'plugins/GridPhysics.min.js', 'gridPhysics', 'gridPhysics');
     }
 
     create() {
@@ -19,14 +25,12 @@ class GameScene extends Phaser.Scene {
         });
         this.tileset = this.map.addTilesetImage('tileset', 'tiles');
 
-        this.cave1Layer = this.map.createStaticLayer('Cave1', this.tileset, 0, 0);
         this.belowLayer = this.map.createStaticLayer('Below Player', this.tileset, 0, 0);
         this.worldLayer = this.map.createStaticLayer('World', this.tileset, 0, 0);
         const HOLE = 25;
 
-        // this.gridPhysics.world.enable(this.belowLayer);
-
-        this.npcGroup = this.add.group();
+        this.gridPhysics.world.enable(this.belowLayer);
+        this.gridPhysics.world.enable(this.worldLayer);
 
         // this.keys will contain all we need to control Player.
         // Any key could just replace the default (like this.key.jump)
@@ -38,20 +42,27 @@ class GameScene extends Phaser.Scene {
             debug: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
         };
 
-        this.spawnPoint = this.map.getObjectLayer('Objects').objects;
+        // todo if new Game set sprites on spawnPoints, else load position of server
+        this.spawnPoints = this.map.getObjectLayer('Objects').objects;
+
+        //todo create group in titleScene
+        this.playerGroup = this.add.group();
+        this.npcGroup = this.add.group();
 
         // CREATE PLAYER!!!
-        //todo create group in titleScene and iterate over spawn points
         this.player = new Player({
             scene: this,
             key: 'player',
-            x: this.spawnPoint[1].x,
-            y: this.spawnPoint[1].y
+            x: this.spawnPoints[1].x,
+            y: this.spawnPoints[1].y
         });
 
-
+        this.gridPhysics.world.enable(this.player);
         this.worldLayer.setCollisionByExclusion([-1, HOLE]);
-        this.worldLayer.setTileIndexCallback(HOLE, this.goIntoCave, this);
+        this.worldLayer.setTileIndexCallback(HOLE, () => {
+            console.log("Entering cave...");
+            this.scene.start('CaveScene', {client: this.client, player: this.player});
+        }, this);
 
         this.physics.add.collider(this.player, this.worldLayer);
 
@@ -87,32 +98,33 @@ class GameScene extends Phaser.Scene {
                 faceColor: new Phaser.Display.Color(40, 39, 37, 255) // Color of colliding face edges
             });
         });
+
+
+
     }
 
-    goIntoCave() {
+ /*   goIntoCave() {
         console.log("Entering cave...")
-        this.player.moveOneStep();
-        const cam = this.cameras.main;
-        cam.fade(250, 0, 0, 0);
-        cam.once("camerafadeoutcomplete", () => {
-            this.belowLayer.setVisible(false);
-            this.worldLayer.setVisible(false);
-            //this.cave1Layer.setVisible(true);
-            //this.player.destroy();
-            //this.restart();
-        });
-        cam.fade(150, 255, 255, 255);
+        //this.player.moveOneStep();
+        //const cam = this.cameras.main;
+        //cam.fade(250, 0, 0, 0);
+        //cam.once("camerafadeoutcomplete", () => {
+        //thisScene.scene.start('CaveScene', {client: this.client, player: this.player});
+         //   cam.fade(10, 255, 255, 255);
+        //});
+        //cam.fade(10, 255, 255, 255);
 
-        /*this.belowLayer.destroy(false);
+        /!*this.belowLayer.destroy(false);
         this.cave1Layer = this.map.createStaticLayer('Cave1', this.tileset, 0, 0);
         //this.map.setLayer(this.cave1Layer);
-        //this.holeLayer = this.map.createStaticLayer('Holes', this.tileset, 0, 0);*/
-    }
+        //this.holeLayer = this.map.createStaticLayer('Holes', this.tileset, 0, 0);*!/
+    }*/
 
     update(time, delta) {
         // Run the update method of Player
         this.player.update(this.keys, time, delta);
     }
+
 }
 
 export default GameScene;
