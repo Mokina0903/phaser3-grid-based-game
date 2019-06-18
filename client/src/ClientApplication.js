@@ -17,8 +17,8 @@ export default class ClientApplication {
                 //over REST
                 this.addPlayer()
 
-            }, error =>
-                alert(error)
+            },
+                //error => alert(error)
         );
     }
 

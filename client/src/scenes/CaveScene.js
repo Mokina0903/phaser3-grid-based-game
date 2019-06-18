@@ -10,6 +10,7 @@ class CaveScene extends Phaser.Scene {
     init(data) {
         this.client = data.client;
         this.player = data.player;
+        this.direction = data.direction;
     }
 
     preload() {
@@ -22,23 +23,32 @@ class CaveScene extends Phaser.Scene {
             key: 'map'
         });
         this.tileset = this.map.addTilesetImage('tileset', 'tiles');
+
+        //todo separate caves into different layers
         this.caveLayer = this.map.createStaticLayer('Cave', this.tileset, 0, 0);
-        const HOLE = 25;
+        const HOLE = 39;
+        const VOID = 134;
 
-        // The camera should follow Player
-
-        this.player = new Player({
-            scene: this,
-            key: 'player',
-            x: this.player.x,
-            y: this.player.y
-        });
-
-        this.caveLayer.setCollisionByExclusion([-1, HOLE]);
+        this.caveLayer.setCollision(VOID);
         this.caveLayer.setTileIndexCallback(HOLE, () => {
             console.log("leaving cave...");
-            //this.scene.start('CaveScene', {newGame: false});
+           // this.leaveCave();
         }, this);
+
+        this.playerGroup = this.add.group();
+        this.npcGroup = this.add.group();
+
+        //todo fill player for mice that also are in a cave
+        this.playerGroup.add(
+            //clientService get all players that are mice in cave
+            this.player = new Player({
+                scene: this,
+                key: 'player',
+                x: this.player.x,
+                y: this.player.y
+            })
+        );
+
 
         this.physics.add.collider(this.player, this.caveLayer);
 
@@ -73,11 +83,56 @@ class CaveScene extends Phaser.Scene {
                 faceColor: new Phaser.Display.Color(40, 39, 37, 255) // Color of colliding face edges
             });
         });
+
+        // this.keys will contain all we need to control Player.
+        this.keys = {
+            left: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT),
+            right: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT),
+            down: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN),
+            up: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP),
+            debug: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
+        };
+
+        const cam = this.cameras.main;
+
+        this.enteringCave();
+    }
+
+    update(time, delta) {
+        this.playerGroup.children.entries.forEach(
+            (sprite) => {
+                sprite.update(this.keys, time, delta);
+            }
+        );
+    }
+
+    enteringCave() {
+        console.log("direction: " + this.direction)
+        let x, y;
+        if (this.direction === "left") {
+            x = this.player.x - 40;
+            y = this.player.y;
+        }
+        console.log(this.player.x + ", " + this.player.y)
+        console.log(x + ", " + y);
+
+        this.physics.world.pause();
+        this.player.anims.play(this.player.type + this.direction, true);
+        this.cameras.main.fadeIn(250);
+        this.tweens.add({
+            targets: this.player,
+            x: x,
+            y: y,
+            duration: 1000,
+            onComplete: () => {
+                this.physics.world.resume();
+            }
+        });
+
     }
 
     leaveCave() {
         console.log("Leaving cave...")
-        this.player.moveOneStep();
         const cam = this.cameras.main;
         //cam.fade(250, 0, 0, 0);
         //cam.once("camerafadeoutcomplete", () => {
@@ -91,6 +146,7 @@ class CaveScene extends Phaser.Scene {
         //this.map.setLayer(this.cave1Layer);
         //this.holeLayer = this.map.createStaticLayer('Holes', this.tileset, 0, 0);*/
     }
+
 }
 
 export default CaveScene;
