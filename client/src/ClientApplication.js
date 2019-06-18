@@ -9,9 +9,14 @@ export default class ClientApplication {
 
         this.stompClient.connect({}, frame => {
                 console.log("Connected :- " + frame);
-                this.stompClient.subscribe('/topic/addPlayer', notifications =>
+                this.stompClient.subscribe('/topic/player', notifications =>
                     alert(notifications));
-                this.addPlayer();
+                // over websocket
+                //this.stompClient.send('/app/addPlayer', "Chuck Norris")
+
+                //over REST
+                this.addPlayer()
+
             }, error =>
                 alert(error)
         );
@@ -43,7 +48,8 @@ export default class ClientApplication {
         }).then(response => response.json())
             .then(data => {
                 console.log("fetching all players in client: " + data);
-                return JSON.parse(data);;
+                return JSON.parse(data);
+                ;
             });
     }
 
