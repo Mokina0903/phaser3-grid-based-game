@@ -1,14 +1,15 @@
-import Player from "../sprites/Player";
+import Player from '../sprites/Player';
 
-class CaveScene extends Phaser.Scene {
+class SurfaceScene extends Phaser.Scene {
     constructor(test) {
         super({
-            key: 'CaveScene'
+            key: 'SurfaceScene'
         });
     }
 
     init(data) {
-        this.client = data.client;
+        // todo list of players, list of npcs
+        this.isNewGame = data.newGame;
         this.player = data.player;
         this.direction = data.direction;
     }
@@ -17,39 +18,51 @@ class CaveScene extends Phaser.Scene {
     }
 
     create() {
-
         // Add the map + bind the tileset
         this.map = this.make.tilemap({
             key: 'map'
         });
         this.tileset = this.map.addTilesetImage('tileset', 'tiles');
 
-        //todo separate caves into different layers
-        this.caveLayer = this.map.createStaticLayer('Cave', this.tileset, 0, 0);
-        const HOLE = 39;
-        const VOID = 134;
+        this.groundLayer = this.map.createStaticLayer('Below Player', this.tileset, 0, 0);
+        this.worldLayer = this.map.createStaticLayer('World', this.tileset, 0, 0);
+        const HOLE = 25;
 
-        this.caveLayer.setCollision(VOID);
-        this.caveLayer.setTileIndexCallback(HOLE, () => {
-            this.leaveCave();
+        this.worldLayer.setCollisionByExclusion([-1, HOLE]);
+        this.worldLayer.setTileIndexCallback(HOLE, () => {
+            this.goIntoCave();
         }, this);
 
         this.playerGroup = this.add.group();
         this.npcGroup = this.add.group();
 
-        //todo fill player for mice that also are in a cave
-        this.playerGroup.add(
-            //clientService get all players that are mice in cave
-            this.player = new Player({
-                scene: this,
-                key: 'player',
-                x: this.player.x,
-                y: this.player.y
-            })
-        );
+        //if new Game set sprites on spawnPoints, else load position of server
+        if(this.isNewGame) {
+            this.spawnPoints = this.map.getObjectLayer('Objects').objects;
 
-        this.physics.add.collider(this.player, this.caveLayer);
+            this.playerGroup.add(
+                this.player = new Player({
+                    scene: this,
+                    key: 'player',
+                    x: this.spawnPoints[1].x + 16,
+                    y: this.spawnPoints[1].y + 16
+                })
+            );
+        }
 
+        else {
+            this.playerGroup.add(
+                this.player = new Player({
+                    scene: this,
+                    key: 'player',
+                    x: this.player.x,
+                    y: this.player.y
+                })
+            );
+        }
+
+        this.physics.add.collider(this.player, this.worldLayer);
+        // The camera should follow Player
         this.cameras.main.startFollow(this.player);
         this.cameras.main.roundPixels = true;
 
@@ -58,7 +71,7 @@ class CaveScene extends Phaser.Scene {
             .text(16, 16, 'Arrow keys to move\nPress "D" to show hitboxes', {
                 font: "12px monospace",
                 fill: "#000000",
-                padding: { x: 20, y: 10 },
+                padding: {x: 20, y: 10},
                 backgroundColor: "#ffffff"
             })
             .setScrollFactor(0)
@@ -75,7 +88,7 @@ class CaveScene extends Phaser.Scene {
                 .graphics()
                 .setAlpha(0.75)
                 .setDepth(20);
-            this.caveLayer.renderDebug(graphics, {
+            this.worldLayer.renderDebug(graphics, {
                 tileColor: null, // Color of non-colliding tiles
                 collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255), // Color of colliding tiles
                 faceColor: new Phaser.Display.Color(40, 39, 37, 255) // Color of colliding face edges
@@ -91,12 +104,15 @@ class CaveScene extends Phaser.Scene {
             debug: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
         };
 
-        const cam = this.cameras.main;
+        if(!this.isNewGame) {
+            this.enterScene()
+        }
 
-        this.enteringCave();
     }
 
     update(time, delta) {
+        // Run the update method of Player
+        //this.player.update(this.keys, time, delta);
         this.playerGroup.children.entries.forEach(
             (sprite) => {
                 sprite.update(this.keys, time, delta);
@@ -104,29 +120,22 @@ class CaveScene extends Phaser.Scene {
         );
     }
 
-    enteringCave() {
+    enterScene() {
         this.player.direction = this.direction;
-        const coordinates = this.player.getPosition();
-
         this.physics.world.pause();
         this.player.anims.play(this.player.type + this.direction.description, true);
         this.cameras.main.fadeIn(250);
         this.tweens.add({
             targets: this.player,
-            x: coordinates[0],
-            y: coordinates[1],
-            duration: 1000,
+            duration: 500,
             onComplete: () => {
                 this.physics.world.resume();
             }
         });
-
     }
 
-    leaveCave() {
-        console.log("Leaving cave...")
+    goIntoCave() {
         let coordinates = this.player.getPosition();
-        console.log(coordinates);
         this.physics.world.pause();
         this.player.anims.play(this.player.type + this.player.direction.description, true);
         this.cameras.main.fadeOut(250);
@@ -134,21 +143,20 @@ class CaveScene extends Phaser.Scene {
             targets: this.player,
             x: coordinates[0],
             y: coordinates[1],
-            duration: 1000,
+            duration: 500,
             onComplete: () => {
-                this.scene.start('GameScene', {newGame: false, player: this.player, direction: this.player.direction});
+                this.scene.start('TunnelScene', {client: this.client, player: this.player, direction: this.player.direction});
             }
         });
     }
 
     isCollision() {
         const newPosition = this.player.getPosition();
-        let tile = this.caveLayer.getTileAtWorldXY(newPosition[0], newPosition[1]);
+        let tile = this.worldLayer.getTileAtWorldXY(newPosition[0], newPosition[1]);
         if (tile == null)
-            return true;
+            return false;
         return tile.collides;
     }
-
 }
 
-export default CaveScene;
+export default SurfaceScene;

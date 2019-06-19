@@ -14,13 +14,6 @@ class TitleScene extends Phaser.Scene {
     }
 
     create() {
-        /*let config = {
-            key: 'title',
-            frames: [{
-                frame: 'title',
-                key: 'player-sprites'
-            }]
-        };*/
 
         this.scene.bringToTop();
 
@@ -58,7 +51,7 @@ class TitleScene extends Phaser.Scene {
         this.startKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
 
        // this.players = this.updatePlayerList()
-        //todo get all players and add text
+        //todo get all players and add info text
     }
 
     async updatePlayerList(players) {
@@ -66,13 +59,13 @@ class TitleScene extends Phaser.Scene {
 
         await fetch(this.client.getAllPlayers())
             .then(response => {
-                console.log("All my players: " + response)
+                console.log("All my players: ")
+                console.log(response)
                 return response;
             });
     }
 
     update(time, delta) {
-
 
         if (this.registry.get('restartScene')) {
             this.restartScene();
@@ -84,12 +77,10 @@ class TitleScene extends Phaser.Scene {
         }
 
         if(this.leftKey.isDown) {
-          //  this.graphicsOff.fillCircleShape(this.circle);
             this.selectMouse(true);
         }
 
         if(this.rightKey.isDown) {
-            //this.graphicsOff.fillCircleShape(this.circle);
             this.selectMouse(false);
         }
 
@@ -114,15 +105,12 @@ class TitleScene extends Phaser.Scene {
     }
 
     startGame() {
-        //todo add list of players
-        this.scene.start('GameScene', {newGame: true});
+        this.scene.start('SurfaceScene', {newGame: true});
     }
 
     restartScene() {
-       // this.scene.stop('GameScene');
-        this.scene.launch('GameScene');
+        this.scene.launch('SurfaceScene');
         this.scene.bringToTop();
-
         this.registry.set('restartScene', false);
     }
 }

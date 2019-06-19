@@ -4,19 +4,19 @@ export default class ClientApplication {
     constructor() {
         this.serverAddress = "http://localhost:8080";
 
+        //add new player over REST
+        this.addPlayer();
+
+        //setup websocket
         this.socket = new SockJS(this.serverAddress + "/ws");
         this.stompClient = Stomp.over(this.socket);
 
         this.stompClient.connect({}, frame => {
-                console.log("Connected :- " + frame);
-                this.stompClient.subscribe('/topic/player', notifications =>
-                    alert(notifications));
-                // over websocket
-                //this.stompClient.send('/app/addPlayer', "Chuck Norris")
-
-                //over REST
-                this.addPlayer()
-
+            console.log("Connected :- " + frame);
+            this.stompClient.subscribe('/topic/player', notifications => {
+                alert(notifications);
+                //todo callback for /topic/player
+            });
             },
                 //error => alert(error)
         );
@@ -28,9 +28,13 @@ export default class ClientApplication {
             headers: {"Content-Type": "application/json; charset=utf-8"},
             method: 'POST',
             body: 'ChuckNorris'
-        }).then(response => console.log("added player response: " + response));
+        }).then(response => {
+            console.log("added player response: ");
+            console.log(response);
+        });
     }
 
+    // todo should use websockets
     // character is mouse or cat
     setCharacterOfPlayer(character) {
         fetch(this.serverAddress + "/players/char", {

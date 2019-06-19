@@ -1,8 +1,8 @@
 import 'phaser';
 import BootScene from './scenes/BootScene';
-import GameScene from './scenes/GameScene';
+import SurfaceScene from './scenes/SurfaceScene';
 import TitleScene from './scenes/TitleScene';
-import CaveScene from './scenes/CaveScene'
+import TunnelScene from './scenes/TunnelScene'
 
 const config = {
     type: Phaser.AUTO,
@@ -19,8 +19,8 @@ const config = {
     scene: [
         BootScene,
         TitleScene,
-        GameScene,
-        CaveScene
+        SurfaceScene,
+        TunnelScene
     ]
 };
 

@@ -91,7 +91,6 @@ export default class Player extends Phaser.GameObjects.Sprite {
                 this.scene.physics.world.resume();
                 this.steps++;
                 this.isMoving = false;
-                console.log("steps: " + this.steps);
             }
         });
     }
@@ -107,9 +106,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
                 this.direction = Direction.DOWN;
     }
 
-
     getPosition() {
-        console.log(this.direction.description);
         const distance = 32;
         switch (this.direction) {
             case Direction.LEFT:
