@@ -9,8 +9,6 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
         this.scene = config.scene;
 
-        //config.scene.gridPhysics.world.enable(this);
-
         this.acceleration = 0;
         this.body.maxVelocity.x = 100;
         this.body.maxVelocity.y = 100;
