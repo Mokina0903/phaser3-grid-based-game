@@ -141,6 +141,14 @@ class CaveScene extends Phaser.Scene {
         });
     }
 
+    isCollision() {
+        const newPosition = this.player.getPosition();
+        let tile = this.caveLayer.getTileAtWorldXY(newPosition[0], newPosition[1]);
+        if (tile == null)
+            return true;
+        return tile.collides;
+    }
+
 }
 
 export default CaveScene;

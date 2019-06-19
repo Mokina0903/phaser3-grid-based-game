@@ -27,7 +27,7 @@ class GameScene extends Phaser.Scene {
         });
         this.tileset = this.map.addTilesetImage('tileset', 'tiles');
 
-        this.belowLayer = this.map.createStaticLayer('Below Player', this.tileset, 0, 0);
+        this.groundLayer = this.map.createStaticLayer('Below Player', this.tileset, 0, 0);
         this.worldLayer = this.map.createStaticLayer('World', this.tileset, 0, 0);
         const HOLE = 25;
 
@@ -36,7 +36,7 @@ class GameScene extends Phaser.Scene {
             this.goIntoCave();
         }, this);
 
-        //this.gridPhysics.world.enable(this.belowLayer);
+        //this.gridPhysics.world.enable(this.groundLayer);
         //this.gridPhysics.world.enable(this.worldLayer);
 
         this.playerGroup = this.add.group();
@@ -50,8 +50,8 @@ class GameScene extends Phaser.Scene {
                 this.player = new Player({
                     scene: this,
                     key: 'player',
-                    x: this.spawnPoints[1].x,
-                    y: this.spawnPoints[1].y
+                    x: this.spawnPoints[1].x + 16,
+                    y: this.spawnPoints[1].y + 16
                 })
             );
         }
@@ -66,6 +66,9 @@ class GameScene extends Phaser.Scene {
                 })
             );
         }
+
+        let tile = this.worldLayer.getTileAtWorldXY(this.player.x, this.player.y);
+        console.log((tile != null))
 
         this.physics.add.collider(this.player, this.worldLayer);
         // The camera should follow Player
@@ -160,7 +163,14 @@ class GameScene extends Phaser.Scene {
             }
         });
     }
-     //  this.player.enterScene(this, "caveScene");
+
+    isCollision() {
+        const newPosition = this.player.getPosition();
+        let tile = this.worldLayer.getTileAtWorldXY(newPosition[0], newPosition[1]);
+        if (tile == null)
+            return false;
+        return tile.collides;
+    }
 }
 
 export default GameScene;

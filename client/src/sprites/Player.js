@@ -24,10 +24,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
         this.isMoving = false;
         this.steps = 0;
 
-        //todo Enum
         this.direction = Direction.DOWN;
-
-        // config.scene.gridPhysics.world.addToQue(this);
     }
 
     update(keys, time, delta) {
@@ -39,33 +36,29 @@ export default class Player extends Phaser.GameObjects.Sprite {
             debug: keys.debug.isDown
         };
 
+        this.setDirection(input);
+
         if(this.isMoving)
             return;
-
-        const speed = 60;
 
         // Stop any previous movement from the last frame
         this.body.setVelocity(0);
 
+
         if (input.left) {
-            this.body.setVelocityX(-speed * delta);
             this.direction = Direction.LEFT;
-            this.moveOneStep()
+            if(!this.scene.isCollision())
+                this.moveOneStep();
         } else if (input.right) {
-            this.body.setVelocityX(speed * delta);
             this.direction = Direction.RIGHT;
-            this.moveOneStep()
-
+            if(!this.scene.isCollision())
+                this.moveOneStep();
         } else if (input.up) {
-            //this.body.setVelocityY(-speed * delta);
-            this.direction = Direction.UP;
-            this.moveOneStep()
-
+            if(!this.scene.isCollision())
+                this.moveOneStep();
         } else if (input.down) {
-           // this.body.setVelocityY(speed * delta);
-            this.direction = Direction.DOWN;
-            this.moveOneStep()
-
+            if(!this.scene.isCollision())
+                this.moveOneStep();
         } else {
             this.anims.stop();
         }
@@ -84,6 +77,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
     }
 
     moveOneStep() {
+        //check if wall
         this.isMoving = true;
         const coordinates = this.getPosition();
         this.scene.physics.world.pause();
@@ -101,6 +95,18 @@ export default class Player extends Phaser.GameObjects.Sprite {
             }
         });
     }
+
+    setDirection(input) {
+        if (input.left)
+                this.direction = Direction.LEFT;
+         else if(input.right)
+                this.direction = Direction.RIGHT;
+        else if(input.up)
+                this.direction = Direction.UP;
+        else if(input.down)
+                this.direction = Direction.DOWN;
+    }
+
 
     getPosition() {
         console.log(this.direction.description);
