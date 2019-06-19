@@ -11,6 +11,8 @@ class GameScene extends Phaser.Scene {
         // todo list of players, list of npcs
         // todo state if new game or leftCave
         this.isNewGame = data.newGame;
+        this.player = data.player;
+        this.direction = data.direction;
     }
 
     preload() {
@@ -32,34 +34,40 @@ class GameScene extends Phaser.Scene {
         this.worldLayer.setCollisionByExclusion([-1, HOLE]);
         this.worldLayer.setTileIndexCallback(HOLE, () => {
             this.goIntoCave();
-            //this.scene.start('CaveScene', {client: this.client, player: this.player});
         }, this);
 
         //this.gridPhysics.world.enable(this.belowLayer);
         //this.gridPhysics.world.enable(this.worldLayer);
 
-        // todo if new Game set sprites on spawnPoints, else load position of server
-        this.spawnPoints = this.map.getObjectLayer('Objects').objects;
-
-        //todo create group in titleScene
         this.playerGroup = this.add.group();
         this.npcGroup = this.add.group();
 
-        // CREATE PLAYER!!!
-        this.playerGroup.add(
-            this.player = new Player({
-                scene: this,
-                key: 'player',
-                x: this.spawnPoints[1].x,
-                y: this.spawnPoints[1].y
-            })
-        );
+        //if new Game set sprites on spawnPoints, else load position of server
+        if(this.isNewGame) {
+            this.spawnPoints = this.map.getObjectLayer('Objects').objects;
 
-        // Run the update method of all players
+            this.playerGroup.add(
+                this.player = new Player({
+                    scene: this,
+                    key: 'player',
+                    x: this.spawnPoints[1].x,
+                    y: this.spawnPoints[1].y
+                })
+            );
+        }
 
+        else {
+            this.playerGroup.add(
+                this.player = new Player({
+                    scene: this,
+                    key: 'player',
+                    x: this.player.x,
+                    y: this.player.y
+                })
+            );
+        }
 
         this.physics.add.collider(this.player, this.worldLayer);
-
         // The camera should follow Player
         this.cameras.main.startFollow(this.player);
         this.cameras.main.roundPixels = true;
@@ -102,6 +110,10 @@ class GameScene extends Phaser.Scene {
             debug: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
         };
 
+        if(!this.isNewGame) {
+            this.enterScene()
+        }
+
     }
 
     update(time, delta) {
@@ -114,29 +126,41 @@ class GameScene extends Phaser.Scene {
         );
     }
 
-    goIntoCave() {
-        console.log("direction: " + this.player.direction)
-        let x, y;
-        if (this.player.direction === "left") {
-            x = this.player.x - 40;
-            y = this.player.y;
-        }
-        console.log(this.player.x + ", " + this.player.y)
-        console.log(x + ", " + y);
+    enterScene() {
+        this.player.direction = this.direction;
+        const coordinates = this.player.getPosition();
 
         this.physics.world.pause();
-        this.player.anims.play(this.player.type + this.player.direction, true);
+        this.player.anims.play(this.player.type + this.direction.description, true);
+        this.cameras.main.fadeIn(250);
+        this.tweens.add({
+            targets: this.player,
+            x: coordinates[0],
+            y: coordinates[1],
+            duration: 1000,
+            onComplete: () => {
+                this.physics.world.resume();
+            }
+        });
+    }
+
+    goIntoCave() {
+        let coordinates = this.player.getPosition();
+        console.log(coordinates);
+        this.physics.world.pause();
+        this.player.anims.play(this.player.type + this.player.direction.description, true);
         this.cameras.main.fadeOut(250);
         this.tweens.add({
             targets: this.player,
-            x: x,
-            y: y,
+            x: coordinates[0],
+            y: coordinates[1],
             duration: 1000,
             onComplete: () => {
                 this.scene.start('CaveScene', {client: this.client, player: this.player, direction: this.player.direction});
             }
         });
     }
+     //  this.player.enterScene(this, "caveScene");
 }
 
 export default GameScene;

@@ -1,3 +1,5 @@
+import {Direction} from "../enum/Direction";
+
 export default class Player extends Phaser.GameObjects.Sprite {
     constructor(config) {
         super(config.scene, config.x, config.y, config.key);
@@ -14,14 +16,14 @@ export default class Player extends Phaser.GameObjects.Sprite {
         this.body.maxVelocity.y = 100;
 
         this.type = 'mouse';
-        this.anims.play(this.type + '_left');
+        this.anims.play(this.type + '_down');
 
         this.inHole = false;
         this.holeId = 0;
         this.alive = true;
 
         //todo Enum
-        this.direction = "";
+        this.direction = Direction.DOWN;
 
         // config.scene.gridPhysics.world.addToQue(this);
     }
@@ -40,44 +42,24 @@ export default class Player extends Phaser.GameObjects.Sprite {
         // Stop any previous movement from the last frame
         this.body.setVelocity(0);
 
-        /*if(input.debug) {
-            this.moveOneStep(this.scene)
-        }
-*/
         if (input.left) {
             this.body.setVelocityX(-speed * delta);
-            this.direction = "left";
+            this.direction = Direction.LEFT;
         } else if (input.right) {
             this.body.setVelocityX(speed * delta);
-            this.direction = "right";
+            this.direction = Direction.RIGHT;
         } else if (input.up) {
             this.body.setVelocityY(-speed * delta);
-            this.direction = "up";
+            this.direction = Direction.UP;
         } else if (input.down) {
             this.body.setVelocityY(speed * delta);
-            this.direction = "down";
-        }
-
-        if (input.left) {
-            this.anims.play('mouse_left', true);
-        } else if (input.right) {
-            this.anims.play('mouse_right', true);
-        } else if (input.up) {
-            this.anims.play('mouse_up', true);
-        } else if (input.down) {
-            this.anims.play('mouse_down', true);
+            this.direction = Direction.DOWN;
         } else {
             this.anims.stop();
         }
-    }
 
-    freeze() {
-        this.body.setVelocity(0);
-    }
-
-    moveOneStep(scene){
-        console.log("move a step down");
-        scene.physics.moveTo(this, this.x, this.y + 32, 100, 100);
+        if (input)
+            this.anims.play(this.type + "_" + this.direction.description, true);
     }
 
     die() {
@@ -87,5 +69,37 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
     enterHole(id) {
         // todo
+    }
+
+    /*enterScene(from, to) {
+        const coordinates = this.getPosition();
+
+        from.physics.world.pause();
+        this.anims.play(this.player.type + this.direction.description, true);
+        from.cameras.main.fadeIn(250);
+        from.tweens.add({
+            targets: this.player,
+            x: coordinates[0],
+            y: coordinates[1],
+            duration: 1000,
+            onComplete: () => {
+                from.scene.start(to, {client: this.client, player: this.player, direction: this.player.direction});
+            }
+        });
+    }*/
+
+    getPosition() {
+        console.log(this.direction.description);
+        const distance = 40;
+        switch (this.direction) {
+            case Direction.LEFT:
+                return [this.x - distance, this.y];
+            case Direction.RIGHT:
+                return [this.x + distance, this.y];
+            case Direction.UP:
+                return [this.x, this.y - distance];
+            case Direction.DOWN:
+                return [this.x, this.y + distance];
+        }
     }
 }

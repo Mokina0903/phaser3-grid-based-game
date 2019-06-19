@@ -31,8 +31,7 @@ class CaveScene extends Phaser.Scene {
 
         this.caveLayer.setCollision(VOID);
         this.caveLayer.setTileIndexCallback(HOLE, () => {
-            console.log("leaving cave...");
-           // this.leaveCave();
+            this.leaveCave();
         }, this);
 
         this.playerGroup = this.add.group();
@@ -48,7 +47,6 @@ class CaveScene extends Phaser.Scene {
                 y: this.player.y
             })
         );
-
 
         this.physics.add.collider(this.player, this.caveLayer);
 
@@ -107,22 +105,16 @@ class CaveScene extends Phaser.Scene {
     }
 
     enteringCave() {
-        console.log("direction: " + this.direction)
-        let x, y;
-        if (this.direction === "left") {
-            x = this.player.x - 40;
-            y = this.player.y;
-        }
-        console.log(this.player.x + ", " + this.player.y)
-        console.log(x + ", " + y);
+        this.player.direction = this.direction;
+        const coordinates = this.player.getPosition();
 
         this.physics.world.pause();
-        this.player.anims.play(this.player.type + this.direction, true);
+        this.player.anims.play(this.player.type + this.direction.description, true);
         this.cameras.main.fadeIn(250);
         this.tweens.add({
             targets: this.player,
-            x: x,
-            y: y,
+            x: coordinates[0],
+            y: coordinates[1],
             duration: 1000,
             onComplete: () => {
                 this.physics.world.resume();
@@ -133,18 +125,20 @@ class CaveScene extends Phaser.Scene {
 
     leaveCave() {
         console.log("Leaving cave...")
-        const cam = this.cameras.main;
-        //cam.fade(250, 0, 0, 0);
-        //cam.once("camerafadeoutcomplete", () => {
-        this.scene.start('GameScene', {newGame: false});
-        //   cam.fade(10, 255, 255, 255);
-        //});
-        //cam.fade(10, 255, 255, 255);
-
-        /*this.belowLayer.destroy(false);
-        this.cave1Layer = this.map.createStaticLayer('Cave1', this.tileset, 0, 0);
-        //this.map.setLayer(this.cave1Layer);
-        //this.holeLayer = this.map.createStaticLayer('Holes', this.tileset, 0, 0);*/
+        let coordinates = this.player.getPosition();
+        console.log(coordinates);
+        this.physics.world.pause();
+        this.player.anims.play(this.player.type + this.player.direction.description, true);
+        this.cameras.main.fadeOut(250);
+        this.tweens.add({
+            targets: this.player,
+            x: coordinates[0],
+            y: coordinates[1],
+            duration: 1000,
+            onComplete: () => {
+                this.scene.start('GameScene', {newGame: false, player: this.player, direction: this.player.direction});
+            }
+        });
     }
 
 }
