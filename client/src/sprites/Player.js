@@ -21,6 +21,8 @@ export default class Player extends Phaser.GameObjects.Sprite {
         this.inHole = false;
         this.holeId = 0;
         this.alive = true;
+        this.isMoving = false;
+        this.steps = 0;
 
         //todo Enum
         this.direction = Direction.DOWN;
@@ -37,6 +39,9 @@ export default class Player extends Phaser.GameObjects.Sprite {
             debug: keys.debug.isDown
         };
 
+        if(this.isMoving)
+            return;
+
         const speed = 60;
 
         // Stop any previous movement from the last frame
@@ -45,15 +50,22 @@ export default class Player extends Phaser.GameObjects.Sprite {
         if (input.left) {
             this.body.setVelocityX(-speed * delta);
             this.direction = Direction.LEFT;
+            this.moveOneStep()
         } else if (input.right) {
             this.body.setVelocityX(speed * delta);
             this.direction = Direction.RIGHT;
+            this.moveOneStep()
+
         } else if (input.up) {
-            this.body.setVelocityY(-speed * delta);
+            //this.body.setVelocityY(-speed * delta);
             this.direction = Direction.UP;
+            this.moveOneStep()
+
         } else if (input.down) {
-            this.body.setVelocityY(speed * delta);
+           // this.body.setVelocityY(speed * delta);
             this.direction = Direction.DOWN;
+            this.moveOneStep()
+
         } else {
             this.anims.stop();
         }
@@ -71,26 +83,28 @@ export default class Player extends Phaser.GameObjects.Sprite {
         // todo
     }
 
-    /*enterScene(from, to) {
+    moveOneStep() {
+        this.isMoving = true;
         const coordinates = this.getPosition();
-
-        from.physics.world.pause();
-        this.anims.play(this.player.type + this.direction.description, true);
-        from.cameras.main.fadeIn(250);
-        from.tweens.add({
-            targets: this.player,
+        this.scene.physics.world.pause();
+        this.anims.play(this.type + this.direction.description, true);
+        this.scene.tweens.add({
+            targets: this,
             x: coordinates[0],
             y: coordinates[1],
-            duration: 1000,
+            duration: 500,
             onComplete: () => {
-                from.scene.start(to, {client: this.client, player: this.player, direction: this.player.direction});
+                this.scene.physics.world.resume();
+                this.steps++;
+                this.isMoving = false;
+                console.log("steps: " + this.steps);
             }
         });
-    }*/
+    }
 
     getPosition() {
         console.log(this.direction.description);
-        const distance = 40;
+        const distance = 32;
         switch (this.direction) {
             case Direction.LEFT:
                 return [this.x - distance, this.y];
