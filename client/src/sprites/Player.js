@@ -16,7 +16,8 @@ export default class Player extends Phaser.GameObjects.Sprite {
         this.body.maxVelocity.y = 100;
 
         this.type = 'mouse';
-        this.anims.play(this.type + '_down');
+        this.direction = Direction.DOWN;
+        this.anims.play(this.type + "_" + this.direction.description);
 
         this.inHole = false;
         this.holeId = 0;
@@ -24,7 +25,6 @@ export default class Player extends Phaser.GameObjects.Sprite {
         this.isMoving = false;
         this.steps = 0;
 
-        this.direction = Direction.DOWN;
     }
 
     update(keys, time, delta) {

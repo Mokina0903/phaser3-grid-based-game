@@ -17,7 +17,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
 
-
 @RestController
 @Slf4j
 @AllArgsConstructor
