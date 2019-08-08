@@ -8,7 +8,6 @@ class TunnelScene extends Phaser.Scene {
     }
 
     init(data) {
-        this.client = data.client;
         this.player = data.player;
         this.direction = data.direction;
     }
@@ -24,7 +23,6 @@ class TunnelScene extends Phaser.Scene {
         });
         this.tileset = this.map.addTilesetImage('tileset', 'tiles');
 
-        //todo separate caves into different layers
         this.caveLayer = this.map.createStaticLayer('Cave', this.tileset, 0, 0);
         const HOLE = 39;
         const VOID = 134;
@@ -37,17 +35,15 @@ class TunnelScene extends Phaser.Scene {
         this.playerGroup = this.add.group();
         this.npcGroup = this.add.group();
 
-        //todo fill player for mice that also are in a cave
         this.playerGroup.add(
-            //clientService get all players that are mice in cave
             this.player = new Player({
                 scene: this,
                 key: 'player',
+                characterType: this.player.type,
                 x: this.player.x,
                 y: this.player.y
             })
         );
-        // todo draw last location of cats, update if new mouse enters cave
 
         this.physics.add.collider(this.player, this.caveLayer);
 
@@ -92,8 +88,6 @@ class TunnelScene extends Phaser.Scene {
             debug: this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D)
         };
 
-        const cam = this.cameras.main;
-
         this.enteringTunnel();
     }
 
@@ -131,6 +125,7 @@ class TunnelScene extends Phaser.Scene {
             y: coordinates[1],
             duration: 500,
             onComplete: () => {
+                this.playerGroup.remove(this.player);
                 this.scene.start('SurfaceScene', {newGame: false, player: this.player, direction: this.player.direction});
             }
         });

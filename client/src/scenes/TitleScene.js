@@ -1,13 +1,8 @@
 class TitleScene extends Phaser.Scene {
-    constructor(test) {
+    constructor() {
         super({
             key: 'TitleScene'
         });
-    }
-
-    //retrieve data from previous scene
-    init(data) {
-        this.client = data.client;
     }
 
     preload() {
@@ -49,20 +44,6 @@ class TitleScene extends Phaser.Scene {
         this.blink = 1000;
 
         this.startKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.X);
-
-       // this.players = this.updatePlayerList()
-        //todo get all players and add info text
-    }
-
-    async updatePlayerList(players) {
-        console.log("update players method...")
-
-        await fetch(this.client.getAllPlayers())
-            .then(response => {
-                console.log("All my players: ")
-                console.log(response)
-                return response;
-            });
     }
 
     update(time, delta) {
@@ -105,7 +86,7 @@ class TitleScene extends Phaser.Scene {
     }
 
     startGame() {
-        this.scene.start('SurfaceScene', {newGame: true});
+        this.scene.start('SurfaceScene', {newGame: true, characterType: this.characterType});
     }
 
     restartScene() {

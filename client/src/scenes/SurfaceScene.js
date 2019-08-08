@@ -8,9 +8,9 @@ class SurfaceScene extends Phaser.Scene {
     }
 
     init(data) {
-        // todo list of players, list of npcs
         this.isNewGame = data.newGame;
         this.player = data.player;
+        this.characterType = data.characterType;
         this.direction = data.direction;
     }
 
@@ -44,17 +44,18 @@ class SurfaceScene extends Phaser.Scene {
                 this.player = new Player({
                     scene: this,
                     key: 'player',
+                    characterType: this.characterType,
                     x: this.spawnPoints[1].x + 16,
                     y: this.spawnPoints[1].y + 16
                 })
-            );
+            )
         }
-
         else {
             this.playerGroup.add(
                 this.player = new Player({
                     scene: this,
                     key: 'player',
+                    characterType: this.player.type,
                     x: this.player.x,
                     y: this.player.y
                 })
@@ -145,7 +146,8 @@ class SurfaceScene extends Phaser.Scene {
             y: coordinates[1],
             duration: 500,
             onComplete: () => {
-                this.scene.start('TunnelScene', {client: this.client, player: this.player, direction: this.player.direction});
+                this.playerGroup.remove(this.player);
+                this.scene.start('TunnelScene', {player: this.player, direction: this.player.direction});
             }
         });
     }

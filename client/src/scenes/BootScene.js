@@ -1,5 +1,4 @@
 import makeAnimations from '../helpers/animations';
-import Client from '../ClientApplication';
 
 class BootScene extends Phaser.Scene {
     constructor() {
@@ -9,7 +8,6 @@ class BootScene extends Phaser.Scene {
     }
 
     preload() {
-        this.client = new Client();
 
         const progressBar = this.add.graphics();
         const progressBox = this.add.graphics();
@@ -30,7 +28,7 @@ class BootScene extends Phaser.Scene {
             progressBar.destroy();
             progressBox.destroy();
             //pass client to next scene
-            this.scene.start('TitleScene', {client: this.client});
+            this.scene.start('TitleScene');
         });
 
         this.load.bitmapFont('font', 'assets/fonts/font.png', 'assets/fonts/font.fnt');

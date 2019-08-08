@@ -1,4 +1,4 @@
-import {Direction} from "../enum/Direction";
+import {Direction} from '../enum/Direction';
 
 export default class Player extends Phaser.GameObjects.Sprite {
     constructor(config) {
@@ -13,7 +13,7 @@ export default class Player extends Phaser.GameObjects.Sprite {
         this.body.maxVelocity.x = 100;
         this.body.maxVelocity.y = 100;
 
-        this.type = 'mouse';
+        this.type = config.characterType;
         this.direction = Direction.DOWN;
         this.anims.play(this.type + "_" + this.direction.description);
 
