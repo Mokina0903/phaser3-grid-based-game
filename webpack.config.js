@@ -30,12 +30,12 @@ module.exports = {
         libraryTarget: 'umd',
         filename: '[name].js'
     },
-    watch: true, 
+    watch: true,
     plugins: [
         definePlugin,
         //new webpack.optimize.CommonsChunkPlugin({ name: 'vendor'/* chunkName= */, filename: 'vendor.bundle.js'/* filename= */ }),
         new HtmlWebpackPlugin({
-            filename: '../index.html',
+            filename: './index.html',
             template: './src/index.html',
             chunks: ['vendor', 'app'],
             chunksSortMode: 'manual',

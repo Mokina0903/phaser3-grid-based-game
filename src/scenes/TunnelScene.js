@@ -1,7 +1,7 @@
-import Player from "../sprites/Player";
+import Player from '../sprites/Player';
 
 class TunnelScene extends Phaser.Scene {
-    constructor(test) {
+    constructor() {
         super({
             key: 'TunnelScene'
         });
@@ -16,7 +16,6 @@ class TunnelScene extends Phaser.Scene {
     }
 
     create() {
-
         // Add the map + bind the tileset
         this.map = this.make.tilemap({
             key: 'map'

@@ -8,8 +8,6 @@ export default class Player extends Phaser.GameObjects.Sprite {
         config.scene.physics.add.collider(this, config.scene);
 
         this.scene = config.scene;
-
-        this.acceleration = 0;
         this.body.maxVelocity.x = 100;
         this.body.maxVelocity.y = 100;
 
@@ -95,8 +93,8 @@ export default class Player extends Phaser.GameObjects.Sprite {
 
     setDirection(input) {
         if (input.left)
-                this.direction = Direction.LEFT;
-         else if(input.right)
+            this.direction = Direction.LEFT;
+        else if(input.right)
                 this.direction = Direction.RIGHT;
         else if(input.up)
                 this.direction = Direction.UP;
