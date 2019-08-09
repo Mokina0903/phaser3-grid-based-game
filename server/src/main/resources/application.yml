@@ -1,3 +1,0 @@
-security:
-  jwt:
-    secret: ${JWT_SECRET:default-unsecure-secret-key}
